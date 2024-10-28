@@ -215,6 +215,23 @@ void opcontrol()
 
   while (true)
   {
+    //tick everything
+
+    //raw sticks
+    leftY.Tick();
+    leftX.Tick();
+    rightY.Tick();
+    rightX.Tick();
+
+    // raw buttons 
+    button_L2.Tick();
+    button_R2.Tick();
+    shift_Button.Tick();
+    button_L1.Tick();
+    // shifted buttons
+    clampActivator.Tick();
+    // motors
+    intake.Tick();
 #pragma region driver code
     //  variable for # of motors per side
     const int sideMotors = 3;
@@ -236,15 +253,7 @@ void opcontrol()
     }
 #pragma endregion
 
-    // raw buttons
-    button_L2.Tick();
-    button_R2.Tick();
-    shift_Button.Tick();
-    button_L1.Tick();
-    // shifted buttons
-    clampActivator.Tick();
-    // motors
-    intake.Tick();
+    
 
     if (clampActivator.IsOn())
     {
