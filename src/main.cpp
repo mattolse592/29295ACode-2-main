@@ -2,6 +2,17 @@
 #include "variables.hpp"
 #include <vector>
 
+#include "ToggleButton.cpp"
+#include "Button.cpp"
+#include "ShiftedButton.cpp"
+#include "MogoMech.cpp"
+#include "Motor.cpp"
+#include "Intake.cpp"
+#include "Stick.cpp"
+#include "RotationSensor.cpp"
+#include "Arm.cpp"
+#include "TapButton.cpp"
+
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
 // https://ez-robotics.github.io/EZ-Template/
@@ -84,16 +95,16 @@ void initialize()
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
 
-      //Auton("Example Drive\n\nDrive forward and come back.", drive_example),
-      //Auton("Example Turn\n\nTurn 3 times.", turn_example),
+      // Auton("Example Drive\n\nDrive forward and come back.", drive_example),
+      // Auton("Example Turn\n\nTurn 3 times.", turn_example),
       // Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
       // Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
       // Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
       // Auton("Combine all 3 movements", combining_movements),
       // Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
-      //Auton("Runs defensive In-Game Autonomous.", defAuton),
+      // Auton("Runs defensive In-Game Autonomous.", defAuton),
       Auton("Runs offensive In-Game Autonomous.", offAuton),
-      //Auton("Runs Skills Autonomous.", skillsAuton),
+      // Auton("Runs Skills Autonomous.", skillsAuton),
   });
 
   // Initialize chassis and auton selector
@@ -161,76 +172,127 @@ void autonomous()
  */
 void opcontrol()
 {
-  // drive variables
-  const float dBand = 5;
 
-  // stick variables to calulate speeds with curve
+  // drive variables to calulate speeds with curve
   double power;
   double powerC;
   double turn;
   double turnC;
 
-  // curve out of 10
-  // modelled after https://www.desmos.com/calculator/toufp2r8qb
-  float pCurve = 0.6;  // curve for fwd/back
+  // input curve constants
+  float pCurve = 0.6;        // curve for fwd/back
   float tCoefficient = 0.75; // curve for turn
-  float tCurve = 1.1; //coefficient for turn
+  float tCurve = 1.1;        // coefficient for turn
 
   double e = exp(1); // Euler's constant
 
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
+  //
+  //  set up module drivers
+  //
+  Stick leftY(master, ANALOG_LEFT_Y);
+  Stick leftX(master, ANALOG_LEFT_X);
+  Stick rightY(master, ANALOG_RIGHT_Y);
+  Stick rightX(master, ANALOG_RIGHT_X);
+
+  Button button_L2(master, DIGITAL_L2);
+  Button shift_Button(master, DIGITAL_R1);
+  Button button_R2(master, DIGITAL_R2);
+  TapButton button_L1(master, DIGITAL_L1);
+
+  ShiftedButton clampActivator(button_L2, shift_Button);
+
+  MogoMech mogo('A');
+  // intake port is probably wrong
+  Intake intake(Motor(7, pros::E_MOTOR_GEARSET_06));
+  //rotaional sensor port is probably wrong
+   RotationSensor rotSen(20);
+  //Hopefully have limit switch and remove this code
+   rotSen.Zero();
+   //arm motor and rotational sensor ports are porbably wrong
+  Arm arm(Motor(8, pros::E_MOTOR_GEARSET_36), rotSen);
+
   while (true)
   {
-    
-
-    // driver code
+#pragma region driver code
     //  variable for # of motors per side
     const int sideMotors = 3;
-    // get stick values
-    if (master.get_analog(ANALOG_LEFT_Y) > dBand || master.get_analog(ANALOG_LEFT_Y) < -dBand)
-    {
-      // calculates power curve for joystick
-      power = master.get_analog(ANALOG_LEFT_Y);
-      powerC = ((1 - pCurve) * power) + ((pCurve * pow(power, 3))/10000);
-      //modelled after https://www.desmos.com/calculator/asjs86sdpy
-      //powerC = power * (pow(e, -(pCurve / 10)) + pow(e, (abs(power) - 127) / 10) * (1 - pow(e, -(pCurve / 10))));
-    }
-    else
-    {
-      powerC = 0;
-    }
+
+    // calculates power curve for joystick
+    power = leftY.GetPosition();
+    powerC = ((1 - pCurve) * power) + ((pCurve * pow(power, 3)) / 16129); //16129 is 127^2
+    // modelled after https://www.desmos.com/calculator/asjs86sdpy
 
     // gets turn value and calculates curve
-    if (master.get_analog(ANALOG_RIGHT_X) > dBand || master.get_analog(ANALOG_RIGHT_X) < -dBand)
-    {
-      turn = -master.get_analog(ANALOG_RIGHT_X);
-      turnC = tCurve * ((1 - tCoefficient) * turn) + ((tCoefficient * pow(turn, 3))/10000);
-      //turnC = turn * (pow(e, -(tCurve / 10)) + pow(e, (abs(turn) - 127) / 10) * (1 - pow(e, -(tCurve / 10))));
-    }
-    else
-    {
-      turnC = 0;
-    }
+    turn = -rightX.GetPosition();
+    turnC = tCurve * ((1 - tCoefficient) * turn) + ((tCoefficient * pow(turn, 3)) / 16129);
 
+    //assigns motor speeds
     for (int i = 0; i < sideMotors; i++)
     {
       chassis.left_motors[i].move(powerC - turnC);
       chassis.right_motors[i].move(powerC + turnC);
     }
+#pragma endregion
 
-    
-    
+    // raw buttons
+    button_L2.Tick();
+    button_R2.Tick();
+    shift_Button.Tick();
+    button_L1.Tick();
+    // shifted buttons
+    clampActivator.Tick();
+    // motors
+    intake.Tick();
+
+    if (clampActivator.IsOn())
+    {
+      mogo.Activate();
+    }
+    else
+    {
+      mogo.Deactivate();
+    }
+
+    //
+    //  Intake
+    //
+
+    if (button_R2.IsPressed())
+    {
+      if (shift_Button.IsPressed())
+      {
+        intake.Reverse();
+      }
+      else
+      {
+        intake.Forward();
+      }
+    }
+    else
+    {
+      intake.Stop();
+    }
+
+    //
+    //    Arm
+    //
+
+    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
+
+
+
+
 
     // master.rumble(".");
 
     // ez::print_to_screen("Rotation Angle: " + std::to_string(rotDeg), 3);
     // master.set_text(1, 1, "Rot: " + std::to_string(rotDeg));
-   // ez::print_to_screen("CataSpeed = " + std::to_string(cataSpeed), 3);
+    // ez::print_to_screen("CataSpeed = " + std::to_string(cataSpeed), 3);
     ez::print_to_screen("Linear Speed: " + std::to_string(power), 4);
     ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
     //  master.set_text(1, 1, std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())) + "power = " + std::to_string(power));
-
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }

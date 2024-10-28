@@ -20,7 +20,7 @@ static pros::Motor cata(3, pros::E_MOTOR_GEARSET_36);
 pros::Rotation rot(22);
 //pros::ADIDigitalIn limitSwitch('H');
 
-pros::ADIDigitalOut blocker('A');
+pros::ADIDigitalOut mogo('A');
 pros::ADIDigitalOut rWing('B');
 pros::ADIDigitalOut lWing('C');
 //pros::ADIDigitalOut rightWing('F');
