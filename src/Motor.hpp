@@ -30,8 +30,8 @@ public:
         SetSpeed(0);
     }
 
-    void Hold() {
-        Motor_.set_brake_mode(MOTOR_BRAKE_BRAKE);
+    void SetBrakeMode(pros::motor_brake_mode_e brakeMode) {
+        Motor_.set_brake_mode(brakeMode);
     }
 };
 #endif  // MOTOR_HPP

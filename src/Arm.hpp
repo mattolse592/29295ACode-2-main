@@ -26,7 +26,7 @@ public:
     Arm(Motor Motor, RotationSensor RotationSensor)
         : Motor_(Motor), RotationSensor_(RotationSensor)
     {
-        Motor_.Hold();
+        Motor_.SetBrakeMode(MOTOR_BRAKE_BRAKE);
     }
 
     void Tick()

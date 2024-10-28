@@ -178,6 +178,8 @@ void opcontrol()
   double powerC;
   double turn;
   double turnC;
+  //  variable for # of motors per side
+  const int sideMotors = 3;
 
   // input curve constants
   float pCurve = 0.6;        // curve for fwd/back
@@ -201,58 +203,58 @@ void opcontrol()
   HoldButton button_R2(master, DIGITAL_R2);
   TapButton button_L1(master, DIGITAL_L1);
 
- // ShiftedButton clampActivator(button_L2, shift_Button);
+  // ShiftedButton clampActivator(button_L2, shift_Button);
 
   MogoMech mogo('A');
   // intake port is probably wrong
   Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
-  //rotaional sensor port is probably wrong
-   RotationSensor rotSen(13);
-  //Hopefully have limit switch and remove this code
-   rotSen.Zero();
-   //arm motor and rotational sensor ports are porbably wrong
+  // rotaional sensor port is probably wrong
+  RotationSensor rotSen(13);
+  // Hopefully have limit switch and remove this code
+  rotSen.Zero();
+  // arm motor and rotational sensor ports are porbably wrong
   Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
 
   while (true)
   {
-    //tick everything
+    // tick everything
 
-    //raw sticks
+    // raw sticks
     leftY.Tick();
     leftX.Tick();
     rightY.Tick();
     rightX.Tick();
 
-    // raw buttons 
+    // raw buttons
     button_L2.Tick();
     button_R2.Tick();
     shift_Button.Tick();
     button_L1.Tick();
-    //clampActivator.Tick();
+
     // motors
     intake.Tick();
+
+    // arm
+    arm.Tick();
+
 #pragma region driver code
-    //  variable for # of motors per side
-    const int sideMotors = 3;
 
     // calculates power curve for joystick
     power = leftY.GetPosition();
-    powerC = ((1 - pCurve) * power) + ((pCurve * pow(power, 3)) / 16129); //16129 is 127^2
+    powerC = ((1 - pCurve) * power) + ((pCurve * pow(power, 3)) / 16129); // 16129 is 127^2
     // modelled after https://www.desmos.com/calculator/asjs86sdpy
 
     // gets turn value and calculates curve
     turn = -rightX.GetPosition();
     turnC = tCurve * ((1 - tCoefficient) * turn) + ((tCoefficient * pow(turn, 3)) / 16129);
 
-    //assigns motor speeds
+    // assigns motor speeds
     for (int i = 0; i < sideMotors; i++)
     {
       chassis.left_motors[i].move(powerC - turnC);
       chassis.right_motors[i].move(powerC + turnC);
     }
 #pragma endregion
-
-    
 
     if (button_L2.IsOn())
     {
@@ -287,18 +289,16 @@ void opcontrol()
     //    Arm
     //
 
-    if (shift_Button.IsPressed()) {
-      arm.ManualMove(rightY.GetPosition());
-    } else {
+    if (shift_Button.IsPressed())
+    {
+      arm.ManualMove(rightY.GetPosition() / 4);
+    }
+    else
+    {
       arm.ManualMove(0);
     }
 
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
-
-
-
-
-
 
     // master.rumble(".");
 
