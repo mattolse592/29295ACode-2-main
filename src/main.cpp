@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "ToggleButton.hpp"
-#include "Button.hpp"
+#include "HoldButton.hpp"
 #include "ShiftedButton.hpp"
 #include "MogoMech.hpp"
 #include "Motor.hpp"
@@ -196,9 +196,9 @@ void opcontrol()
   Stick rightY(master, ANALOG_RIGHT_Y);
   Stick rightX(master, ANALOG_RIGHT_X);
 
-  Button button_L2(master, DIGITAL_L2);
-  Button shift_Button(master, DIGITAL_R1);
-  Button button_R2(master, DIGITAL_R2);
+  ToggleButton button_L2(master, DIGITAL_L2);
+  HoldButton shift_Button(master, DIGITAL_R1);
+  HoldButton button_R2(master, DIGITAL_R2);
   TapButton button_L1(master, DIGITAL_L1);
 
  // ShiftedButton clampActivator(button_L2, shift_Button);
@@ -228,7 +228,6 @@ void opcontrol()
     button_R2.Tick();
     shift_Button.Tick();
     button_L1.Tick();
-    // shifted buttons
     //clampActivator.Tick();
     // motors
     intake.Tick();
@@ -255,7 +254,7 @@ void opcontrol()
 
     
 
-    if (button_L2.IsPressed())
+    if (button_L2.IsOn())
     {
       mogo.Activate();
     }
@@ -290,6 +289,8 @@ void opcontrol()
 
     if (shift_Button.IsPressed()) {
       arm.ManualMove(rightY.GetPosition());
+    } else {
+      arm.ManualMove(0);
     }
 
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));

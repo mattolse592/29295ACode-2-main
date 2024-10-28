@@ -10,7 +10,6 @@ class Arm
 private:
     Motor Motor_;
     RotationSensor RotationSensor_;
-
 public:
     enum State
     {
@@ -27,6 +26,7 @@ public:
     Arm(Motor Motor, RotationSensor RotationSensor)
         : Motor_(Motor), RotationSensor_(RotationSensor)
     {
+        Motor_.Hold();
     }
 
     void Tick()
@@ -53,7 +53,7 @@ public:
 
     void ManualMove(int stickInput)
     {
-        Motor_.SetSpeed(stickInput);
+        Motor_.SetSpeed(stickInput);        
     }
 
     void SetTarget(State state)

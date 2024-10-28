@@ -29,5 +29,9 @@ public:
     void Stop() {
         SetSpeed(0);
     }
+
+    void Hold() {
+        Motor_.set_brake_mode(MOTOR_BRAKE_BRAKE);
+    }
 };
 #endif  // MOTOR_HPP
