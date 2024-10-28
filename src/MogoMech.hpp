@@ -1,3 +1,6 @@
+#ifndef MOGOMECH_HPP
+#define MOGOMECH_HPP
+
 #include "../include/pros/adi.hpp"
 
 class MogoMech
@@ -19,3 +22,4 @@ public:
         Port_.set_value(false);
     }
 };
+#endif  // MOGOMECH_HPP

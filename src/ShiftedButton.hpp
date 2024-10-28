@@ -1,4 +1,7 @@
-#include "Button.cpp"
+#ifndef SHIFTEDBUTTON_HPP
+#define SHIFTEDBUTTON_HPP
+
+#include "Button.hpp"
 
 class ShiftedButton
 {
@@ -29,3 +32,5 @@ public:
         return Shifted_;
     }
 };
+
+#endif  // SHIFTEDBUTTON_HPP

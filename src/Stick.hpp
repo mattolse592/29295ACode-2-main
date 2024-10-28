@@ -1,3 +1,6 @@
+#ifndef STICK_HPP
+#define STICK_HPP
+
 #include "../include/pros/misc.hpp"
 
 class Stick
@@ -31,3 +34,4 @@ public:
         return Position_;
     }
 };
+#endif  // STICK_HPP

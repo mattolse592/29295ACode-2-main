@@ -1,3 +1,6 @@
+#ifndef BUTTON_HPP
+#define BUTTON_HPP
+
 #include "../include/pros/misc.hpp"
 
 class Button
@@ -24,3 +27,4 @@ public:
         return Pressed_;
     }
 };
+#endif  // BUTTON_HPP

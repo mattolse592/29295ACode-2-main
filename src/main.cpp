@@ -2,16 +2,16 @@
 #include "variables.hpp"
 #include <vector>
 
-#include "ToggleButton.cpp"
-#include "Button.cpp"
-#include "ShiftedButton.cpp"
-#include "MogoMech.cpp"
-#include "Motor.cpp"
-#include "Intake.cpp"
-#include "Stick.cpp"
-#include "RotationSensor.cpp"
-#include "Arm.cpp"
-#include "TapButton.cpp"
+#include "ToggleButton.hpp"
+#include "Button.hpp"
+#include "ShiftedButton.hpp"
+#include "MogoMech.hpp"
+#include "Motor.hpp"
+#include "Intake.hpp"
+#include "Stick.hpp"
+#include "RotationSensor.hpp"
+#include "Arm.hpp"
+#include "TapButton.hpp"
 
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!

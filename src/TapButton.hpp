@@ -1,3 +1,6 @@
+#ifndef TAPBUTTON_HPP
+#define TAPBUTTON_HPP
+
 #include "../include/pros/misc.hpp"
 
 class TapButton
@@ -27,3 +30,4 @@ public:
         return Pressed_;
     }
 }; 
+#endif  // TAPBUTTON_HPP

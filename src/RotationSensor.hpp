@@ -1,3 +1,6 @@
+#ifndef ROTATIONSENSOR_HPP
+#define ROTATIONSENSOR_HPP
+
 #include "../include/pros/rotation.hpp"
 
 class RotationSensor
@@ -28,3 +31,4 @@ public:
         return Position_;
     }
 };
+#endif  // ROTATIONSENSOR_HPP

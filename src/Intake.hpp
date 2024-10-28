@@ -1,4 +1,8 @@
-#include "Motor.cpp"
+#ifndef INTAKE_HPP
+#define INTAKE_HPP
+
+#include "Motor.hpp"
+
 class Intake
 {
 
@@ -30,3 +34,4 @@ public:
         Motor_.SetSpeed(0);
     }
 };
+#endif  // INTAKE_HPP

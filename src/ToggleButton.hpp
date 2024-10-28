@@ -1,3 +1,5 @@
+#ifndef TOGGLEBUTTON_HPP
+#define TOGGLEBUTTON_HPP
 
 #include "../include/pros/misc.hpp"
 
@@ -28,3 +30,4 @@ public:
         return Pressed_;
     }
 }; 
+#endif  // TOGGLEBUTTON_HPP

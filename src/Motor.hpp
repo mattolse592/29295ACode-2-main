@@ -1,3 +1,6 @@
+#ifndef MOTOR_HPP
+#define MOTOR_HPP
+
 #include "../include/pros/motors.hpp"
 #include "../include/pros/motors.h"
 class Motor
@@ -27,3 +30,4 @@ public:
         SetSpeed(0);
     }
 };
+#endif  // MOTOR_HPP

@@ -1,5 +1,9 @@
-#include "Motor.cpp"
-#include "RotationSensor.cpp"
+#ifndef ARM_HPP
+#define ARM_HPP
+
+#include "Motor.hpp"
+#include "RotationSensor.hpp"
+
 class Arm
 {
 
@@ -77,3 +81,4 @@ private:
     {
     }
 };
+#endif  // ARM_HPP
