@@ -201,11 +201,11 @@ void opcontrol()
   Button button_R2(master, DIGITAL_R2);
   TapButton button_L1(master, DIGITAL_L1);
 
-  ShiftedButton clampActivator(button_L2, shift_Button);
+ // ShiftedButton clampActivator(button_L2, shift_Button);
 
   MogoMech mogo('A');
   // intake port is probably wrong
-  Intake intake(Motor(6, pros::E_MOTOR_GEARSET_06));
+  Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
   //rotaional sensor port is probably wrong
    RotationSensor rotSen(13);
   //Hopefully have limit switch and remove this code
@@ -229,7 +229,7 @@ void opcontrol()
     shift_Button.Tick();
     button_L1.Tick();
     // shifted buttons
-    clampActivator.Tick();
+    //clampActivator.Tick();
     // motors
     intake.Tick();
 #pragma region driver code
@@ -255,7 +255,7 @@ void opcontrol()
 
     
 
-    if (clampActivator.IsOn())
+    if (button_L2.IsPressed())
     {
       mogo.Activate();
     }
@@ -288,7 +288,12 @@ void opcontrol()
     //    Arm
     //
 
+    if (shift_Button.IsPressed()) {
+      arm.ManualMove(rightY.GetPosition());
+    }
+
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
+
 
 
 

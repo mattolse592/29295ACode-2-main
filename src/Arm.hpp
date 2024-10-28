@@ -51,12 +51,9 @@ public:
         }
     }
 
-    void Up()
+    void ManualMove(int stickInput)
     {
-    }
-
-    void Down()
-    {
+        Motor_.SetSpeed(stickInput);
     }
 
     void SetTarget(State state)
