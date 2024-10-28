@@ -205,13 +205,13 @@ void opcontrol()
 
   MogoMech mogo('A');
   // intake port is probably wrong
-  Intake intake(Motor(7, pros::E_MOTOR_GEARSET_06));
+  Intake intake(Motor(6, pros::E_MOTOR_GEARSET_06));
   //rotaional sensor port is probably wrong
-   RotationSensor rotSen(20);
+   RotationSensor rotSen(13);
   //Hopefully have limit switch and remove this code
    rotSen.Zero();
    //arm motor and rotational sensor ports are porbably wrong
-  Arm arm(Motor(8, pros::E_MOTOR_GEARSET_36), rotSen);
+  Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
 
   while (true)
   {
