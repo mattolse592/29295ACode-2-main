@@ -13,7 +13,7 @@ private:
     pros::controller_analog_e_t Stick_;
 
 public:
-    Stick(pros::Controller &Master, pros::controller_analog_e_t stick, int deadZone=5)
+    Stick(pros::Controller &Master, pros::controller_analog_e_t stick, int deadZone = 5)
         : Master_(Master), Stick_{stick}, DeadZone_{deadZone}
     {
     }
@@ -34,4 +34,4 @@ public:
         return Position_;
     }
 };
-#endif  // STICK_HPP
+#endif // STICK_HPP

@@ -1,18 +1,18 @@
 #ifndef SHIFTEDBUTTON_HPP
 #define SHIFTEDBUTTON_HPP
 
-#include "Button.hpp"
+#include "HoldButton.hpp"
 
 class ShiftedButton
 {
 
 private:
-    Button &TriggerButton_;
-    Button &ShiftButton_;
+    HoldButton &TriggerButton_;
+    HoldButton &ShiftButton_;
     bool Shifted_ = false;
 
 public:
-    ShiftedButton(Button &TriggerButton, Button &ShiftButton)
+    ShiftedButton(HoldButton &TriggerButton, HoldButton &ShiftButton)
         : TriggerButton_(TriggerButton),
           ShiftButton_(ShiftButton)
     {

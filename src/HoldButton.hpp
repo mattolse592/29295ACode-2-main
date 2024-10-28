@@ -1,9 +1,9 @@
-#ifndef BUTTON_HPP
-#define BUTTON_HPP
+#ifndef HOLDBUTTON_HPP
+#define HOLDBUTTON_HPP
 
 #include "../include/pros/misc.hpp"
 
-class Button
+class HoldButton
 {
 
 private:
@@ -12,7 +12,7 @@ private:
     pros::controller_digital_e_t Button_;
 
 public:
-    Button(pros::Controller &Master, pros::controller_digital_e_t button)
+    HoldButton(pros::Controller &Master, pros::controller_digital_e_t button)
         : Master_(Master), Button_{button}
     {
     }
@@ -27,4 +27,4 @@ public:
         return Pressed_;
     }
 };
-#endif  // BUTTON_HPP
+#endif  // HOLDBUTTON_HPP
