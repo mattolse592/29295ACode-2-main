@@ -15,7 +15,7 @@ void offAuton();
 void skillsAuton();
 void defAuton();
 void armTest();
-
+void AWP();
 
 void default_constants();
 void one_mogo_constants();
