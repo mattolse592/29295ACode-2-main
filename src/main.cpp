@@ -202,17 +202,14 @@ void opcontrol()
   HoldButton shift_Button(master, DIGITAL_R1);
   HoldButton button_R2(master, DIGITAL_R2);
   TapButton button_L1(master, DIGITAL_L1);
+  TapButton button_up(master, DIGITAL_UP);
+  TapButton button_down(master, DIGITAL_DOWN);
 
   // ShiftedButton clampActivator(button_L2, shift_Button);
 
   MogoMech mogo('A');
-  // intake port is probably wrong
   Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
-  // rotaional sensor port is probably wrong
-  RotationSensor rotSen(13);
-  // Hopefully have limit switch and remove this code
-  rotSen.Zero();
-  // arm motor and rotational sensor ports are porbably wrong
+  RotationSensor rotSen(5);
   Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
 
   while (true)
@@ -230,9 +227,14 @@ void opcontrol()
     button_R2.Tick();
     shift_Button.Tick();
     button_L1.Tick();
+    button_up.Tick();
+    button_down.Tick();
 
     // motors
     intake.Tick();
+
+    //sensors
+    rotSen.Tick();
 
     // arm
     arm.Tick();
@@ -298,16 +300,28 @@ void opcontrol()
       arm.ManualMove(0);
     }
 
-    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
+    //
+    // temp pid adjust values
+    //
 
-    // master.rumble(".");
+    if (button_up.IsPressed())
+    {
+      arm.ChangeP(0.1);
+    }
+    if (button_down.IsPressed())
+    {
+      arm.ChangeP(-0.1);
+    }
 
-    // ez::print_to_screen("Rotation Angle: " + std::to_string(rotDeg), 3);
-    // master.set_text(1, 1, "Rot: " + std::to_string(rotDeg));
-    // ez::print_to_screen("CataSpeed = " + std::to_string(cataSpeed), 3);
-    ez::print_to_screen("Linear Speed: " + std::to_string(power), 4);
-    ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
-    //  master.set_text(1, 1, std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())) + "power = " + std::to_string(power));
+    arm.SetTarget((Arm::State)(0)); // button_L1.TimesPressed() % 4));
+
+    // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
+    master.set_text(1, 1, "Rot: " + std::to_string(rotSen.GetPosition()));
+   // master.set_text(0, 1, "Arm State: " + (std::to_string(arm.GetState())));
+   // master.set_text(1, 1, "Rot: " + std::to_string(arm.rtnPidValue()));
+    ez::print_to_screen(std::to_string(rotSen.GetPosition()));
+    ez::print_to_screen(std::to_string(arm.GetState()));
+    //ez::print_to_screen(std::to_string(arm.rtnPidValue()));
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }

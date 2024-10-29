@@ -21,12 +21,6 @@ public:
         // Calculate the error
         double error = target_ - measured_value;
 
-        // Wrap error around if it goes out of bounds (for 0-360 degrees)
-        if (error > 180)
-            error -= 360;
-        if (error < -180)
-            error += 360;
-
         // Proportional term
         double proportional = kp_ * error;
 
@@ -53,9 +47,17 @@ public:
         return output;
     }
 
+    void ChangeP(double newP) {
+        kp_ += newP;
+    }
+
     void setTarget(double target)
     {
         target_ = target;
+    }
+
+    double getTarget() {
+        return target;
     }
 
 private:

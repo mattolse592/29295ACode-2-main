@@ -18,7 +18,8 @@ public:
 
     void Tick()
     {
-        Position_ = RotationSensor_.get_position() / 100;
+        Position_ = RotationSensor_.get_position() / 500;
+        //check value here if outside of range
     }
 
     void Zero() {

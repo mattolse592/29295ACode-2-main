@@ -9,6 +9,7 @@ class TapButton
 private:
     pros::Controller &Master_;
     int Pressed_ = 0;
+    bool dePressed_ = false;
     pros::controller_digital_e_t Button_;
 
 public:
@@ -22,12 +23,18 @@ public:
     {
         if (Master_.get_digital_new_press(Button_)){
             Pressed_ = Pressed_ + 1;
+            dePressed_ = true;
+        } else {
+            dePressed_ = false;
         }
     }
 
     int TimesPressed()
     {
         return Pressed_;
+    }
+    bool IsPressed() {
+        return dePressed_;
     }
 }; 
 #endif  // TAPBUTTON_HPP

@@ -11,7 +11,7 @@ class Arm
 private:
     Motor Motor_;
     RotationSensor RotationSensor_;
-    PIDController pid_;
+    PIDController pid_ = PIDController(5.0, 0.0, 0.0, 0.0);
 
 public:
     enum State
@@ -27,7 +27,7 @@ private:
 
 public:
     Arm(Motor Motor, RotationSensor RotationSensor)
-        : Motor_(Motor), RotationSensor_(RotationSensor), pid_(1.0, 0.1, 0.05, 0.0)
+        : Motor_(Motor), RotationSensor_(RotationSensor)
     {
         Motor_.SetBrakeMode(MOTOR_BRAKE_BRAKE);
     }
@@ -58,17 +58,27 @@ public:
         default:
             break;
         }
-        //manual move probably doesn't work
+        // manual move probably doesn't work
     }
 
     void ManualMove(int stickInput)
     {
-        Motor_.SetSpeed(stickInput / 4);
+        Motor_.SetSpeed(stickInput / 2);
     }
 
     void SetTarget(State state)
     {
         target = state;
+    }
+
+    void ChangeP(double newP)
+    {
+        pid_.ChangeP(newP);
+    }
+
+    State GetState()
+    {
+        return target;
     }
 
 private:
