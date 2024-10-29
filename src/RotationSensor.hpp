@@ -18,7 +18,7 @@ public:
 
     void Tick()
     {
-        Position_ = RotationSensor_.get_angle();
+        Position_ = RotationSensor_.get_position() / 100;
     }
 
     void Zero() {

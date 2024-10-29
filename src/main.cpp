@@ -291,7 +291,7 @@ void opcontrol()
 
     if (shift_Button.IsPressed())
     {
-      arm.ManualMove(rightY.GetPosition() / 4);
+      arm.ManualMove(rightY.GetPosition());
     }
     else
     {
