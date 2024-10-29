@@ -173,6 +173,8 @@ void autonomous()
 void opcontrol()
 {
 
+  master.clear();
+
   // drive variables to calulate speeds with curve
   double power;
   double powerC;
@@ -233,12 +235,12 @@ void opcontrol()
     // motors
     intake.Tick();
 
-    //sensors
+    // sensors
     rotSen.Tick();
 
     // arm
     arm.Tick();
-
+/*
 #pragma region driver code
 
     // calculates power curve for joystick
@@ -257,7 +259,7 @@ void opcontrol()
       chassis.right_motors[i].move(powerC + turnC);
     }
 #pragma endregion
-
+*/
     if (button_L2.IsOn())
     {
       mogo.Activate();
@@ -313,15 +315,18 @@ void opcontrol()
       arm.ChangeP(-0.1);
     }
 
-    arm.SetTarget((Arm::State)(0)); // button_L1.TimesPressed() % 4));
+    arm.SetTarget((Arm::State)(2)); //button_L1.TimesPressed() % 4));
 
+    //writing to screen
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
-    master.set_text(1, 1, "Rot: " + std::to_string(rotSen.GetPosition()));
-   // master.set_text(0, 1, "Arm State: " + (std::to_string(arm.GetState())));
-   // master.set_text(1, 1, "Rot: " + std::to_string(arm.rtnPidValue()));
-    ez::print_to_screen(std::to_string(rotSen.GetPosition()));
-    ez::print_to_screen(std::to_string(arm.GetState()));
-    //ez::print_to_screen(std::to_string(arm.rtnPidValue()));
+    master.set_text(0, 0, "MotSped: " + std::to_string(arm.GetPIDValue()));
+   // master.set_text(0, 3, "Rot: " + std::to_string(arm.GetPosition()));
+    // master.set_text(0, 1, "Arm State: " + (std::to_string(arm.GetState())));
+    // master.set_text(1, 1, "Rot: " + std::to_string(arm.rtnPidValue()));
+
+    ez::print_to_screen("Rot: " + std::to_string(arm.GetPosition()));
+   // ez::print_to_screen(std::to_string(arm.GetState()));
+    // ez::print_to_screen(std::to_string(arm.rtnPidValue()));
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }

@@ -7,7 +7,7 @@ class RotationSensor
 {
 
 private:
-    int Position_;
+    double Position_;
     pros::Rotation RotationSensor_;
 
 public:
@@ -18,7 +18,7 @@ public:
 
     void Tick()
     {
-        Position_ = RotationSensor_.get_position() / 500;
+        Position_ = RotationSensor_.get_position() / 500; //500 is gear ratio
         //check value here if outside of range
     }
 
@@ -27,9 +27,9 @@ public:
         Tick();
     }
 
-    int GetPosition()
+    double GetPosition()
     {
-        return Position_;
+        return RotationSensor_.get_position() / 500;    //500 is gear ratio
     }
 };
 #endif  // ROTATIONSENSOR_HPP

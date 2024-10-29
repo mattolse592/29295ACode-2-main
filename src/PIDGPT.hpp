@@ -47,8 +47,8 @@ public:
         return output;
     }
 
-    void ChangeP(double newP) {
-        kp_ += newP;
+    void ChangeP(double deltaP) {
+        kp_ += deltaP;
     }
 
     void setTarget(double target)

@@ -11,7 +11,10 @@ class Arm
 private:
     Motor Motor_;
     RotationSensor RotationSensor_;
-    PIDController pid_ = PIDController(5.0, 0.0, 0.0, 0.0);
+    PIDController pid_ = PIDController(7.0, 0.0, 0.0, 0.0);
+
+    int current_position = 0;
+    double pid_output;
 
 public:
     enum State
@@ -34,11 +37,11 @@ public:
 
     void Tick()
     {
-        double current_position = RotationSensor_.GetPosition();
-        double pid_output = pid_.Calculate(current_position);
+        current_position = RotationSensor_.GetPosition();
+        pid_output = pid_.Calculate(current_position);
 
         // Use the output from PID to set motor speed
-        Motor_.SetSpeed(static_cast<int>(pid_output));
+        Motor_.SetSpeed(pid_output);
 
         switch (target)
         {
@@ -63,7 +66,7 @@ public:
 
     void ManualMove(int stickInput)
     {
-        Motor_.SetSpeed(stickInput / 2);
+        //Motor_.SetSpeed(stickInput / 2);
     }
 
     void SetTarget(State state)
@@ -71,9 +74,18 @@ public:
         target = state;
     }
 
-    void ChangeP(double newP)
+    void ChangeP(double deltaP)
     {
-        pid_.ChangeP(newP);
+        pid_.ChangeP(deltaP);
+    }
+
+    double GetPosition()
+    {
+        return current_position;
+    }
+
+    double GetPIDValue() {
+        return pid_output;
     }
 
     State GetState()
@@ -81,6 +93,7 @@ public:
         return target;
     }
 
+#pragma region arm states
 private:
     void Dock()
     {
@@ -101,5 +114,6 @@ private:
     {
         pid_.setTarget(165.0);
     }
+#pragma endregion
 };
 #endif // ARM_HPP
