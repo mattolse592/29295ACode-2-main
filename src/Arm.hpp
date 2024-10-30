@@ -38,7 +38,7 @@ public:
         double pid_output = pid_.Calculate(current_position);
 
         // Use the output from PID to set motor speed
-         Motor_.SetSpeed(pid_output);
+        Motor_.SetSpeed(pid_output);
 
         switch (Target_)
         {
@@ -63,18 +63,13 @@ public:
 
     void ManualMove(int stickInput)
     {
-        // Motor_.SetSpeed(stickInput / 2);
+        Motor_.SetSpeed(stickInput / 2);
     }
 
     void SetTarget(State state)
     {
         Target_ = state;
     }
-
-    //    void ChangeP(double deltaP)
-    //  {
-    //    pid_.ChangeP(deltaP);
-    //}
 
     double GetPosition()
     {
@@ -95,7 +90,7 @@ public:
 private:
     void Dock()
     {
-        pid_.setTarget(0.0);
+        pid_.setTarget(5.0);
     }
 
     void Load()

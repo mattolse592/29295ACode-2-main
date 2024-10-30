@@ -63,11 +63,6 @@ public:
         return currentValue;
     }
 
-    void ChangeP(double deltaP)
-    {
-        kp_ += deltaP;
-    }
-
     void setTarget(double target)
     {
         target_ = target;

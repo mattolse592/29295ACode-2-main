@@ -172,8 +172,6 @@ void autonomous()
  */
 void opcontrol()
 {
-  master.clear();
-
   // drive variables to calulate speeds with curve
   double power;
   double powerC;
@@ -183,9 +181,9 @@ void opcontrol()
   const int sideMotors = 3;
 
   // input curve constants
-  float pCurve = 0.6;        // curve for fwd/back
+  float pCurve = 0.6;       // curve for fwd/back
   float tCoefficient = 0.5; // curve for turn
-  float tCurve = 1.1;        // coefficient for turn
+  float tCurve = 1.1;       // coefficient for turn
 
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
@@ -211,8 +209,6 @@ void opcontrol()
   RotationSensor rotSen(5);
   rotSen.Zero();
   Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
-
-
 
   while (true)
   {
@@ -260,6 +256,9 @@ void opcontrol()
     }
 #pragma endregion
 
+    //
+    // Mogo code
+    //
     if (button_L2.IsOn())
     {
       mogo.Activate();
@@ -272,7 +271,6 @@ void opcontrol()
     //
     //  Intake
     //
-
     if (button_R2.IsPressed())
     {
       if (shift_Button.IsPressed())
@@ -292,41 +290,20 @@ void opcontrol()
     //
     //    Arm
     //
-
-    if (shift_Button.IsPressed())
+    if (shift_Button.IsPressed() && rightY.GetPosition() > 0)
     {
       arm.ManualMove(rightY.GetPosition());
     }
-    else
-    {
-      arm.ManualMove(0);
-    }
-
-    //
-    // temp pid adjust values
-    //
-
-    // if (button_up.IsPressed())
-    // {
-    //   arm.ChangeP(0.1);
-    // }
-    // if (button_down.IsPressed())
-    // {
-    //   arm.ChangeP(-0.1);
-    // }
 
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
 
-    //writing to screen
+    //
+    // writing to screen
+    //
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
     master.set_text(0, 0, "MotSped: " + std::to_string(arm.GetPIDValue()));
-   // master.set_text(0, 3, "Rot: " + std::to_string(arm.GetPosition()));
-    // master.set_text(0, 1, "Arm State: " + (std::to_string(arm.GetState())));
-    // master.set_text(1, 1, "Rot: " + std::to_string(arm.rtnPidValue()));
-
+  
     ez::print_to_screen("Rot: " + std::to_string(arm.GetPosition()));
-   // ez::print_to_screen(std::to_string(arm.GetState()));
-    // ez::print_to_screen(std::to_string(arm.rtnPidValue()));
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
