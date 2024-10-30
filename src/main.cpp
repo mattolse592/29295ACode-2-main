@@ -203,9 +203,15 @@ void opcontrol()
   TapButton button_down(master, DIGITAL_DOWN);
 
   // ShiftedButton clampActivator(button_L2, shift_Button);
+  //code for if you want to lock unclamping behind the shift button. Make sure to tick() if added.
 
+  //pneumatics
   MogoMech mogo('A');
+
+  //intake subsystem
   Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
+
+  //arm subsystem
   RotationSensor rotSen(5);
   rotSen.Zero();
   Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
@@ -296,6 +302,12 @@ void opcontrol()
     }
 
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
+
+
+
+
+
+
 
     //
     // writing to screen
