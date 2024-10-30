@@ -195,14 +195,15 @@ void opcontrol()
   Stick rightY(master, ANALOG_RIGHT_Y);
   Stick rightX(master, ANALOG_RIGHT_X);
 
-  ToggleButton button_L2(master, DIGITAL_L2);
+  ToggleButton button_A(master, DIGITAL_A);
   HoldButton shift_Button(master, DIGITAL_R1);
   HoldButton button_R2(master, DIGITAL_R2);
+  HoldButton button_L2(master, DIGITAL_L2);
   TapButton button_L1(master, DIGITAL_L1);
   TapButton button_up(master, DIGITAL_UP);
   TapButton button_down(master, DIGITAL_DOWN);
 
-  // ShiftedButton clampActivator(button_L2, shift_Button);
+  // ShiftedButton clampActivator(button_A, shift_Button);
   //code for if you want to lock unclamping behind the shift button. Make sure to tick() if added.
 
   //pneumatics
@@ -227,8 +228,9 @@ void opcontrol()
     rightX.Tick();
 
     // raw buttons
-    button_L2.Tick();
+    button_A.Tick();
     button_R2.Tick();
+    button_L2.Tick();
     shift_Button.Tick();
     button_L1.Tick();
     button_up.Tick();
@@ -265,7 +267,7 @@ void opcontrol()
     //
     // Mogo code
     //
-    if (button_L2.IsOn())
+    if (button_A.IsOn())
     {
       mogo.Activate();
     }
@@ -277,21 +279,31 @@ void opcontrol()
     //
     //  Intake
     //
-    if (button_R2.IsPressed())
-    {
-      if (shift_Button.IsPressed())
-      {
-        intake.Reverse();
-      }
-      else
-      {
-        intake.Forward();
-      }
+    if (button_R2.IsPressed()) {
+      intake.Forward();
     }
-    else
-    {
+    else if (button_L2.IsPressed()) {
+      intake.Reverse();
+    } else {
       intake.Stop();
     }
+
+    //old intake code to work with shift button
+    // if (button_R2.IsPressed())
+    // {
+    //   if (shift_Button.IsPressed())
+    //   {
+    //     intake.Reverse();
+    //   }
+    //   else
+    //   {
+    //     intake.Forward();
+    //   }
+    // }
+    // else
+    // {
+    //   intake.Stop();
+    // }
 
     //
     //    Arm
@@ -302,7 +314,6 @@ void opcontrol()
     }
 
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
-
 
 
 
