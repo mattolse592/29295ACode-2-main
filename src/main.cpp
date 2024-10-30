@@ -172,7 +172,6 @@ void autonomous()
  */
 void opcontrol()
 {
-
   master.clear();
 
   // drive variables to calulate speeds with curve
@@ -185,10 +184,8 @@ void opcontrol()
 
   // input curve constants
   float pCurve = 0.6;        // curve for fwd/back
-  float tCoefficient = 0.75; // curve for turn
+  float tCoefficient = 0.5; // curve for turn
   float tCurve = 1.1;        // coefficient for turn
-
-  double e = exp(1); // Euler's constant
 
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
@@ -212,7 +209,10 @@ void opcontrol()
   MogoMech mogo('A');
   Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
   RotationSensor rotSen(5);
+  rotSen.Zero();
   Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
+
+
 
   while (true)
   {
@@ -240,7 +240,7 @@ void opcontrol()
 
     // arm
     arm.Tick();
-/*
+
 #pragma region driver code
 
     // calculates power curve for joystick
@@ -259,7 +259,7 @@ void opcontrol()
       chassis.right_motors[i].move(powerC + turnC);
     }
 #pragma endregion
-*/
+
     if (button_L2.IsOn())
     {
       mogo.Activate();
@@ -306,16 +306,16 @@ void opcontrol()
     // temp pid adjust values
     //
 
-    if (button_up.IsPressed())
-    {
-      arm.ChangeP(0.1);
-    }
-    if (button_down.IsPressed())
-    {
-      arm.ChangeP(-0.1);
-    }
+    // if (button_up.IsPressed())
+    // {
+    //   arm.ChangeP(0.1);
+    // }
+    // if (button_down.IsPressed())
+    // {
+    //   arm.ChangeP(-0.1);
+    // }
 
-    arm.SetTarget((Arm::State)(2)); //button_L1.TimesPressed() % 4));
+    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
 
     //writing to screen
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);

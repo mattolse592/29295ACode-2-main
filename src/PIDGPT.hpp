@@ -12,6 +12,8 @@ private:
     double kd;
     double target;
 
+    double currentValue;
+
 public:
     PIDController(double kp, double ki, double kd, double target)
         : kp_(kp), ki_(ki), kd_(kd), target_(target), previous_error_(0), integral_(0) {}
@@ -26,6 +28,18 @@ public:
 
         // Integral term
         integral_ += error;
+        if (abs(error) < 1)
+        {
+            integral_ = 0.0;
+        }
+        if (integral_ > 127)
+        {
+            integral_ = 127;
+        }
+        else if (integral_ < -127)
+        {
+            integral_ = -127;
+        }
         double integral = ki_ * integral_;
 
         // Derivative term
@@ -36,18 +50,21 @@ public:
         double output = proportional + integral + derivative;
 
         // Limit output to motor's accepted range (-127 to 127)
-        if (output > 127) {
+        if (output > 127)
+        {
             output = 127;
         }
-            
-        if (output < -127) {
+
+        if (output < -127)
+        {
             output = -127;
         }
-
-        return output;
+        currentValue = output;
+        return currentValue;
     }
 
-    void ChangeP(double deltaP) {
+    void ChangeP(double deltaP)
+    {
         kp_ += deltaP;
     }
 
@@ -56,8 +73,14 @@ public:
         target_ = target;
     }
 
-    double getTarget() {
+    double getTarget()
+    {
         return target;
+    }
+
+    double getCurrentValue()
+    {
+        return currentValue;
     }
 
 private:
