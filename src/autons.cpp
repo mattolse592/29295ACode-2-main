@@ -236,7 +236,7 @@ const int defTurnSpeed = 110;
 void AWP() {
 
   // Mogo rush
-  chassis.set_drive_pid(12, DRIVE_SPEED);
+  chassis.set_drive_pid(-12, DRIVE_SPEED);
   chassis.wait_drive();
 
   // turn towards mogo
@@ -244,16 +244,16 @@ void AWP() {
   chassis.wait_drive();
 
   // drives and grabs mogo 
-  chassis.set_drive_pid(12, DRIVE_SPEED);
+  chassis.set_drive_pid(-6, DRIVE_SPEED);
   chassis.wait_drive();
   mogo.Activate();
 
   // score pre load and turn
-  intake.Forward();
+  //intake.Forward();
   chassis.set_turn_pid(-10, TURN_SPEED);
 
   // back up into rings and score 
-  chassis.set_drive_pid(-10, DRIVE_SPEED);
+  chassis.set_drive_pid(10, DRIVE_SPEED);
   chassis.wait_drive();
   pros::delay(1000);
 
@@ -263,7 +263,7 @@ void AWP() {
   chassis.wait_drive();
 
   // drives to mogo and grabs it
-  chassis.set_drive_pid(12, DRIVE_SPEED);
+  chassis.set_drive_pid(-12, DRIVE_SPEED);
   chassis.wait_drive();
   mogo.Activate();
 
@@ -271,20 +271,20 @@ void AWP() {
   chassis.set_turn_pid(30, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-20, DRIVE_SPEED);
+  chassis.set_drive_pid(20, DRIVE_SPEED);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-10, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-20, DRIVE_SPEED);
+  chassis.set_drive_pid(-0, DRIVE_SPEED);
   chassis.wait_drive();
 
   // drives to ladder
   chassis.set_turn_pid(15, TURN_SPEED);
   chassis.wait_drive();
   
-  chassis.set_drive_pid(40, DRIVE_SPEED);
+  chassis.set_drive_pid(-40, DRIVE_SPEED);
   chassis.wait_drive();
 
 }

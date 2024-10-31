@@ -103,7 +103,7 @@ void initialize()
       // Auton("Combine all 3 movements", combining_movements),
       // Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
       // Auton("Runs defensive In-Game Autonomous.", defAuton),
-      Auton("Runs offensive In-Game Autonomous.", offAuton),
+      Auton("Runs AWP Autonomous.", AWP),
       // Auton("Runs Skills Autonomous.", skillsAuton),
   });
 
@@ -173,6 +173,8 @@ void autonomous()
 void opcontrol()
 {
 
+
+  ez::as::auton_selector.call_selected_auton();
   // drive variables to calulate speeds with curve
   double power;
   double powerC;
