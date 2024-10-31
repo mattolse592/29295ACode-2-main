@@ -13,6 +13,8 @@ private:
     RotationSensor RotationSensor_;
     PIDController pid_ = PIDController(2.4, 0.1, 10.0, 0.0);
 
+    bool manualTakeover_;
+
 public:
     enum State
     {
@@ -34,36 +36,39 @@ public:
 
     void Tick()
     {
-        int current_position = RotationSensor_.GetPosition();
-        double pid_output = pid_.Calculate(current_position);
-
-        // Use the output from PID to set motor speed
-        Motor_.SetSpeed(pid_output);
-
-        switch (Target_)
+        if (manualTakeover_ == false)
         {
-        case DOCK:
-            Dock();
-            break;
-        case LOAD:
-            Load();
-            break;
-        case REACH:
-            Reach();
-            break;
-        case SCORE:
-            Score();
-            break;
+            int current_position = RotationSensor_.GetPosition();
+            double pid_output = pid_.Calculate(current_position);
 
-        default:
-            break;
+            // Use the output from PID to set motor speed
+            Motor_.SetSpeed(pid_output);
+
+            switch (Target_)
+            {
+            case DOCK:
+                Dock();
+                break;
+            case LOAD:
+                Load();
+                break;
+            case REACH:
+                Reach();
+                break;
+            case SCORE:
+                Score();
+                break;
+
+            default:
+                break;
+            }
         }
-        // manual move probably doesn't work
     }
 
     void ManualMove(int stickInput)
     {
         Motor_.SetSpeed(stickInput / 2);
+        manualTakeover_ = true;
     }
 
     void SetTarget(State state)
@@ -71,6 +76,12 @@ public:
         Target_ = state;
     }
 
+    void ManualMoveOff()
+    {
+        manualTakeover_ = false;
+    }
+
+    // get functions
     double GetPosition()
     {
         return RotationSensor_.GetPosition();

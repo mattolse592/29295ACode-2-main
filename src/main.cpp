@@ -313,6 +313,9 @@ void opcontrol()
       arm.ManualMove(rightY.GetPosition());
     }
 
+    if (button_L1.IsPressed()) {
+      
+    }
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
 
 
