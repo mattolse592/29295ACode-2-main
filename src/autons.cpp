@@ -1,4 +1,17 @@
 #include "main.h"
+
+
+#include "ToggleButton.hpp"
+#include "HoldButton.hpp"
+#include "ShiftedButton.hpp"
+#include "MogoMech.hpp"
+#include "Motor.hpp"
+#include "Intake.hpp"
+#include "Stick.hpp"
+#include "RotationSensor.hpp"
+#include "Arm.hpp"
+#include "TapButton.hpp"
+
 // #include "variables.hpp"
 
 /////
@@ -16,6 +29,11 @@ const int SWING_SPEED = 90;
 ///
 // Constants
 ///
+
+MogoMech mogo('A');
+Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
+
+
 
 // It's best practice to tune constants when the robot is empty and with heavier game objects, or with lifts up vs down.
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
@@ -216,5 +234,57 @@ const int defDriveSpeed = 110;
 const int defTurnSpeed = 110;
 
 void AWP() {
-  chassis.set_drive_pid(1, DRIVE_SPEED);
+
+  // Mogo rush
+  chassis.set_drive_pid(12, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // turn towards mogo
+  chassis.set_turn_pid(35, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drives and grabs mogo 
+  chassis.set_drive_pid(12, DRIVE_SPEED);
+  chassis.wait_drive();
+  mogo.Activate();
+
+  // score pre load and turn
+  intake.Forward();
+  chassis.set_turn_pid(-10, TURN_SPEED);
+
+  // back up into rings and score 
+  chassis.set_drive_pid(-10, DRIVE_SPEED);
+  chassis.wait_drive();
+  pros::delay(1000);
+
+  // drops mogo and turns to grab the other one
+  mogo.Deactivate();
+  chassis.set_turn_pid(-90, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drives to mogo and grabs it
+  chassis.set_drive_pid(12, DRIVE_SPEED);
+  chassis.wait_drive();
+  mogo.Activate();
+
+  // backs up to corner
+  chassis.set_turn_pid(30, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-20, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-10, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-20, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // drives to ladder
+  chassis.set_turn_pid(15, TURN_SPEED);
+  chassis.wait_drive();
+  
+  chassis.set_drive_pid(40, DRIVE_SPEED);
+  chassis.wait_drive();
+
 }
