@@ -182,7 +182,7 @@ void opcontrol()
 
   // input curve constants
   float pCurve = 0.6;       // curve for fwd/back
-  float tCoefficient = 0.5; // curve for turn
+  float tCoefficient = 0.4; // curve for turn
   float tCurve = 1.1;       // coefficient for turn
 
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
