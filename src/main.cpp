@@ -213,7 +213,7 @@ void opcontrol()
   Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
 
   // arm subsystem
-  RotationSensor rotSen(5);
+  RotationSensor rotSen(14);
   rotSen.Zero();
   Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
 
