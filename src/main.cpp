@@ -33,7 +33,7 @@ Drive chassis(
 
     // IMU Port
     ,
-    19
+    16
 
     // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
     //    (or tracking wheel diameter)
@@ -204,15 +204,15 @@ void opcontrol()
   TapButton button_down(master, DIGITAL_DOWN);
 
   // ShiftedButton clampActivator(button_A, shift_Button);
-  //code for if you want to lock unclamping behind the shift button. Make sure to tick() if added.
+  // code for if you want to lock unclamping behind the shift button. Make sure to tick() if added.
 
-  //pneumatics
+  // pneumatics
   MogoMech mogo('A');
 
-  //intake subsystem
+  // intake subsystem
   Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
 
-  //arm subsystem
+  // arm subsystem
   RotationSensor rotSen(5);
   rotSen.Zero();
   Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
@@ -279,16 +279,20 @@ void opcontrol()
     //
     //  Intake
     //
-    if (button_R2.IsPressed()) {
+    if (button_R2.IsPressed())
+    {
       intake.Forward();
     }
-    else if (button_L2.IsPressed()) {
+    else if (button_L2.IsPressed())
+    {
       intake.Reverse();
-    } else {
+    }
+    else
+    {
       intake.Stop();
     }
 
-    //old intake code to work with shift button
+#pragma region old intake code to work with shift button
     // if (button_R2.IsPressed())
     // {
     //   if (shift_Button.IsPressed())
@@ -304,31 +308,31 @@ void opcontrol()
     // {
     //   intake.Stop();
     // }
+#pragma endregion
 
     //
     //    Arm
     //
-    if (shift_Button.IsPressed() && rightY.GetPosition() > 0)
+    if (shift_Button.IsPressed())
     {
+      arm.ManualMoveSet(true);
       arm.ManualMove(rightY.GetPosition());
+      arm.Manual();
+      arm.SetTarget((Arm::State)(3));
+    }
+    else
+    {
+      arm.ManualMoveSet(false);
     }
 
-    if (button_L1.IsPressed()) {
-      
-    }
-    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
-
-
-
-
-
+    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
 
     //
     // writing to screen
     //
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
     master.set_text(0, 0, "MotSped: " + std::to_string(arm.GetPIDValue()));
-  
+
     ez::print_to_screen("Rot: " + std::to_string(arm.GetPosition()));
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

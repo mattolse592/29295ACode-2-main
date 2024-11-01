@@ -11,7 +11,7 @@ class Arm
 private:
     Motor Motor_;
     RotationSensor RotationSensor_;
-    PIDController pid_ = PIDController(2.4, 0.1, 10.0, 0.0);
+    PIDController pid_ = PIDController(2.4, 0.1, 9.0, 0.0);
 
     bool manualTakeover_;
 
@@ -21,7 +21,8 @@ public:
         DOCK = 0,
         LOAD = 1,
         REACH = 2,
-        SCORE = 3
+        SCORE = 3,
+        MANUAL = 4
     };
 
 private:
@@ -55,8 +56,8 @@ public:
             case REACH:
                 Reach();
                 break;
-            case SCORE:
-                Score();
+            case MANUAL:
+                // at function here
                 break;
 
             default:
@@ -68,7 +69,7 @@ public:
     void ManualMove(int stickInput)
     {
         Motor_.SetSpeed(stickInput / 2);
-        manualTakeover_ = true;
+        SetTarget(MANUAL);
     }
 
     void SetTarget(State state)
@@ -76,9 +77,9 @@ public:
         Target_ = state;
     }
 
-    void ManualMoveOff()
+    void ManualMoveSet(bool takeOverSetting)
     {
-        manualTakeover_ = false;
+        manualTakeover_ = takeOverSetting;
     }
 
     // get functions
@@ -97,6 +98,10 @@ public:
         return Target_;
     }
 
+    void Manual()
+    {
+        pid_.setTarget(RotationSensor_.GetPosition());
+    }
 #pragma region arm states
 private:
     void Dock()
@@ -106,18 +111,14 @@ private:
 
     void Load()
     {
-        pid_.setTarget(29.0);
+        pid_.setTarget(26.0);
     }
 
     void Reach()
     {
-        pid_.setTarget(122.0);
+        pid_.setTarget(120.0);
     }
 
-    void Score()
-    {
-        pid_.setTarget(165.0);
-    }
 #pragma endregion
 };
 #endif // ARM_HPP
