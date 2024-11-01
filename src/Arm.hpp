@@ -13,7 +13,7 @@ private:
     RotationSensor RotationSensor_;
     PIDController pid_ = PIDController(2.4, 0.1, 9.0, 0.0);
 
-    bool manualTakeover_;
+    bool manualTakeover_ = false;
 
 public:
     enum State
@@ -21,7 +21,6 @@ public:
         DOCK = 0,
         LOAD = 1,
         REACH = 2,
-        SCORE = 3,
         MANUAL = 4
     };
 
