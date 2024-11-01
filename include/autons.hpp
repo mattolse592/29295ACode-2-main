@@ -4,6 +4,7 @@
 
 extern Drive chassis;
 
+void soloAWP();
 void drive_example();
 void turn_example();
 void wait_until_change_speed();
@@ -15,6 +16,7 @@ void offAuton();
 void skillsAuton();
 void defAuton();
 void armTest();
+
 
 
 void default_constants();

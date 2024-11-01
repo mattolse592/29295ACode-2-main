@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "YesLogan(actually all logan)",
+    "project_name": "AWP red mid ring",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -189,8 +189,8 @@
       }
     },
     "upload_options": {
-      "description": "NoLogan",
-      "icon": "pizza",
+      "description": "pickle",
+      "icon": "power",
       "slot": 1
     }
   }
