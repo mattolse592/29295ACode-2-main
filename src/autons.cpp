@@ -4,18 +4,16 @@
 #include "Motor.hpp"
 #include "Intake.hpp"
 
-
-
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
 
-const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
-                             // If this is 127 and the robot tries to heading correct, it's only correcting by
-                             // making one side slower.  When this is 87%, it's correcting by making one side
-                             // faster and one side slower, giving better heading correction.
- int TURN_SPEED = 90;
+int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
+                       // If this is 127 and the robot tries to heading correct, it's only correcting by
+                       // making one side slower.  When this is 87%, it's correcting by making one side
+                       // faster and one side slower, giving better heading correction.
+int TURN_SPEED = 90;
 const int SWING_SPEED = 90;
 
 ///
@@ -26,11 +24,6 @@ Intake i(Motor(-6, pros::E_MOTOR_GEARSET_06));
 
 // It's best practice to tune constants when the robot is empty and with heavier game objects, or with lifts up vs down.
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
-
-
-
-
-
 
 void default_constants()
 {
@@ -79,112 +72,119 @@ void modified_exit_condition()
   chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
+void soloAWP()
+{
+  // head for mobile goal and clamp
+  chassis.set_drive_pid(-70, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-12, DRIVE_SPEED - 50);
+  chassis.wait_drive();
+  m.set_value(true);
+  pros::delay(200);
 
-void soloAWP() {
-
-
-//drive forwards 
-chassis.set_drive_pid(-115, DRIVE_SPEED);
-chassis.wait_drive();
-
-//turns toward mogo
-chassis.set_turn_pid(35, TURN_SPEED);
-chassis.wait_drive();
-
-//drives up, graps mogo and score preload
-chassis.set_drive_pid(-20, DRIVE_SPEED - 70);
-chassis.wait_drive();
-m.set_value(true);
-pros::delay(200);
-i.Forward();
-
-//turn and back up into rings
-chassis.set_turn_pid(-10, TURN_SPEED);
-chassis.wait_drive();
-chassis.set_drive_pid(75, DRIVE_SPEED - 20);
-chassis.wait_drive();
-chassis.set_drive_pid(10, 50);
-chassis.wait_drive();
-pros::delay(1000);
-
-//drops mogo and turns towards the other one
-m.set_value(false);
-chassis.set_turn_pid(30, TURN_SPEED);
-chassis.wait_drive();
-TURN_SPEED -= 30;
-chassis.set_turn_pid(-45, TURN_SPEED);
-chassis.wait_drive();
-
-// drives and grabs mogo
-chassis.set_drive_pid(-70, DRIVE_SPEED - 40);
-chassis.wait_drive();
-m.set_value(true);
-pros::delay(200);
-chassis.set_drive_pid(-20, DRIVE_SPEED);
-chassis.wait_drive();
-
-//turns towards ring stack
-chassis.set_turn_pid(45, TURN_SPEED);
-chassis.wait_drive();
-
-//drives into rings
-chassis.set_drive_pid(87, DRIVE_SPEED);
-chassis.wait_drive();
-pros::delay(500);
-
-chassis.set_turn_pid(180, TURN_SPEED);
-chassis.wait_drive();
-
-chassis.set_drive_pid(50, DRIVE_SPEED);
-chassis.wait_drive();
-chassis.set_drive_pid(30, DRIVE_SPEED - 90);
-chassis.wait_drive();
-
-
-/*
-//turns to and drive near corner
-chassis.set_turn_pid(-10, TURN_SPEED);
-chassis.wait_drive();
-chassis.set_drive_pid(60, DRIVE_SPEED);
-chassis.wait_drive();
-
-//turns and drives into corner
-chassis.set_turn_pid(-60, TURN_SPEED);
-chassis.wait_drive();
-chassis.set_drive_pid(110, DRIVE_SPEED);
-chassis.wait_drive();
-
-// turns drops mogo and goes to ladder
-chassis.set_drive_pid(-35, DRIVE_SPEED);
-chassis.wait_drive();
-chassis.set_turn_pid(120, TURN_SPEED);
-chassis.wait_drive();
-m.set_value(false);
-i.Stop();
-chassis.set_drive_pid(110, DRIVE_SPEED);
-chassis.wait_drive();
-chassis.set_drive_pid(30, DRIVE_SPEED - 90);
-*/
+  // load preload and grab next ring
+  i.Forward();
+  chassis.set_turn_pid(110, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(30, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  pros::delay(3000);
+  i.Stop();
 }
 
+void soloAWPG()
+{
 
+  i.ChangeSpeed(105);
 
+  // drive forwards
+  chassis.set_drive_pid(-115, DRIVE_SPEED);
+  chassis.wait_drive();
 
+  // turns toward mogo
+  chassis.set_turn_pid(35, TURN_SPEED);
+  chassis.wait_drive();
 
+  // drives up, graps mogo and score preload
+  chassis.set_drive_pid(-20, DRIVE_SPEED - 70);
+  chassis.wait_drive();
+  m.set_value(true);
+  pros::delay(200);
+  i.Forward();
 
+  // turn and back up into rings
+  chassis.set_turn_pid(-10, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED - 40);
+  chassis.wait_drive();
+  pros::delay(500);
+  chassis.set_drive_pid(40, DRIVE_SPEED);
+  chassis.wait_drive();
+  i.Stop();
+  DRIVE_SPEED -= 10;
 
+  // drops mogo and turns towards the other one
+  m.set_value(false);
+  chassis.set_turn_pid(30, TURN_SPEED);
+  chassis.wait_drive();
+  i.Reverse();
+  TURN_SPEED -= 30;
+  chassis.set_turn_pid(-48, TURN_SPEED);
+  chassis.wait_drive();
 
+  // drives and grabs mogo
+  chassis.set_drive_pid(-70, DRIVE_SPEED - 30);
+  chassis.wait_drive();
+  pros::delay(100);
+  m.set_value(true);
+  pros::delay(400);
 
+  // turns towards middle ring stack
+  chassis.set_turn_pid(45, TURN_SPEED);
+  i.Forward();
+  chassis.wait_drive();
 
+  // drives into rings
+  chassis.set_drive_pid(80, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  chassis.set_drive_pid(10, 50);
+  chassis.wait_drive();
 
+  chassis.set_turn_pid(180, TURN_SPEED);
+  chassis.wait_drive();
 
+  chassis.set_drive_pid(50, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(30, DRIVE_SPEED - 90);
+  chassis.wait_drive();
 
+  // drive to corner code
 
+  // //turns to and drive near corner
+  // chassis.set_turn_pid(-10, TURN_SPEED);
+  // chassis.wait_drive();
+  // chassis.set_drive_pid(70, DRIVE_SPEED);
+  // chassis.wait_drive();
 
+  // //turns and drives into corner
+  // chassis.set_turn_pid(-75, TURN_SPEED);
+  // chassis.wait_drive();
+  // chassis.set_drive_pid(100, DRIVE_SPEED);
+  // chassis.wait_drive();
 
-
-
-
+  // // turns drops mogo and goes to ladder
+  // chassis.set_drive_pid(-35, DRIVE_SPEED);
+  // chassis.wait_drive();
+  // chassis.set_turn_pid(120, TURN_SPEED);
+  // chassis.wait_drive();
+  // m.set_value(false);
+  // i.Stop();
+  // chassis.set_drive_pid(115, DRIVE_SPEED);
+  // chassis.wait_drive();
+  // chassis.set_drive_pid(30, DRIVE_SPEED - 90);
+}
 
 ///
 // Drive Example
@@ -520,15 +520,14 @@ void offAuton()
   chassis.set_drive_pid(40, 127);
   chassis.wait_drive();
 
-/*
-  // turn
-  chassis.set_turn_pid(-420, 127);
-  chassis.wait_drive();
-*/
+  /*
+    // turn
+    chassis.set_turn_pid(-420, 127);
+    chassis.wait_drive();
+  */
   // swing to grab corner ball
   chassis.set_swing_pid(RIGHT_SWING, -466, 127);
   chassis.wait_drive();
-
 
   // right wing extend
   rWing.set_value(true);
@@ -541,7 +540,7 @@ void offAuton()
   // close corner wing
   rWing.set_value(false);
 
-    chassis.set_drive_pid(32, 127);
+  chassis.set_drive_pid(32, 127);
   chassis.wait_drive();
 
   // swing to slam in the three triballs
