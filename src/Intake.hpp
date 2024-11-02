@@ -8,6 +8,7 @@ class Intake
 
 private:
     Motor Motor_;
+    int Speed_;
 
 public:
     Intake(Motor Motor)
@@ -32,6 +33,10 @@ public:
     void Stop()
     {
         Motor_.SetSpeed(0);
+    }
+
+    void ChangeSpeed(int speed) {
+        Speed_ = speed;
     }
 };
 #endif  // INTAKE_HPP

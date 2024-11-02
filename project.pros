@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "AWP red mid ring",
+    "project_name": "safe red auton",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -191,7 +191,7 @@
     "upload_options": {
       "description": "pickle",
       "icon": "power",
-      "slot": 1
+      "slot": 2
     }
   }
 }
