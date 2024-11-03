@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "safe red auton",
+    "project_name": "NOO AUTOAUTON TEST",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -189,9 +189,9 @@
       }
     },
     "upload_options": {
-      "description": "pickle",
-      "icon": "power",
-      "slot": 2
+      "description": "pookle",
+      "icon": "X",
+      "slot": 7
     }
   }
 }

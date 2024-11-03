@@ -95,7 +95,14 @@ void initialize()
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
 
-        Auton("Runs solo AWP autonomous", soloAWP),
+      // Auton("Runs Red solo AWP autonomous", soloAWPred),
+      // Auton("Runs Red Safe autonomous", SafeAutonRed),
+      // Auton("Runs blue solo AWP autonomous", soloAWPblue),
+      // Auton("Runs blue Safe autonomous", SafeAutonBlue),
+       Auton(" get off the line Auton", OffLineAuton),
+
+      //Auton(" Testing skills auton", skillsAuton),
+      
       // Auton("Example Drive\n\nDrive forward and come back.", drive_example),
       // Auton("Example Turn\n\nTurn 3 times.", turn_example),
       // Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
@@ -104,7 +111,7 @@ void initialize()
       // Auton("Combine all 3 movements", combining_movements),
       // Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
       // Auton("Runs defensive In-Game Autonomous.", defAuton),
-      //Auton("Runs AWP Autonomous.", AWP),
+      // Auton("Runs AWP Autonomous.", AWP),
       // Auton("Runs Skills Autonomous.", skillsAuton),
   });
 
@@ -173,12 +180,6 @@ void autonomous()
  */
 void opcontrol()
 {
-
-
-
-
-
-
 
   // drive variables to calulate speeds with curve
   double power;

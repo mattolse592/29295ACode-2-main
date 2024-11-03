@@ -4,7 +4,11 @@
 
 extern Drive chassis;
 
-void soloAWP();
+void soloAWPred();
+void soloAWPblue();
+void SafeAutonRed();
+void SafeAutonBlue();
+void OffLineAuton();
 void drive_example();
 void turn_example();
 void wait_until_change_speed();

@@ -72,14 +72,15 @@ void modified_exit_condition()
   chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
-void soloAWP()
+void SafeAutonRed()
 {
+  DRIVE_SPEED -= 40;
   // head for mobile goal and clamp
-  chassis.set_drive_pid(-70, DRIVE_SPEED);
+  chassis.set_drive_pid(-55, DRIVE_SPEED);
   chassis.wait_drive();
-  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.set_turn_pid(37, TURN_SPEED - 20);
   chassis.wait_drive();
-  chassis.set_drive_pid(-12, DRIVE_SPEED - 50);
+  chassis.set_drive_pid(-30, DRIVE_SPEED - 20);
   chassis.wait_drive();
   m.set_value(true);
   pros::delay(200);
@@ -88,16 +89,21 @@ void soloAWP()
   i.Forward();
   chassis.set_turn_pid(110, TURN_SPEED);
   chassis.wait_drive();
+
+  // accont for ring stuck drive into ring stack
+  pros::delay(2000);
+  i.Reverse();
+  pros::delay(1000);
+  i.Forward();
   chassis.set_drive_pid(30, DRIVE_SPEED - 20);
   chassis.wait_drive();
   pros::delay(3000);
-  i.Stop();
 }
 
-void soloAWPG()
+void soloAWPred()
 {
-
-  i.ChangeSpeed(105);
+  // red solo awp code doesn't get middle ring
+  i.ChangeSpeed(115);
 
   // drive forwards
   chassis.set_drive_pid(-115, DRIVE_SPEED);
@@ -111,81 +117,178 @@ void soloAWPG()
   chassis.set_drive_pid(-20, DRIVE_SPEED - 70);
   chassis.wait_drive();
   m.set_value(true);
-  pros::delay(200);
+  pros::delay(300);
   i.Forward();
 
   // turn and back up into rings
   chassis.set_turn_pid(-10, TURN_SPEED);
   chassis.wait_drive();
+
+  // drops mogo
+  m.set_value(false);
   chassis.set_drive_pid(50, DRIVE_SPEED - 40);
   chassis.wait_drive();
-  pros::delay(500);
-  chassis.set_drive_pid(40, DRIVE_SPEED);
-  chassis.wait_drive();
+  pros::delay(200);
   i.Stop();
+  // hopefully has ring inside bot
+  chassis.set_drive_pid(45, DRIVE_SPEED);
+  chassis.wait_drive();
   DRIVE_SPEED -= 10;
 
-  // drops mogo and turns towards the other one
-  m.set_value(false);
-  chassis.set_turn_pid(30, TURN_SPEED);
-  chassis.wait_drive();
-  i.Reverse();
+  // turns towards the other mogo
   TURN_SPEED -= 30;
   chassis.set_turn_pid(-48, TURN_SPEED);
   chassis.wait_drive();
 
   // drives and grabs mogo
-  chassis.set_drive_pid(-70, DRIVE_SPEED - 30);
+  chassis.set_drive_pid(-65, DRIVE_SPEED - 30);
   chassis.wait_drive();
   pros::delay(100);
   m.set_value(true);
-  pros::delay(400);
-
-  // turns towards middle ring stack
-  chassis.set_turn_pid(45, TURN_SPEED);
+  pros::delay(300);
   i.Forward();
-  chassis.wait_drive();
 
-  // drives into rings
-  chassis.set_drive_pid(80, DRIVE_SPEED - 20);
-  chassis.wait_drive();
-  chassis.set_drive_pid(10, 50);
-  chassis.wait_drive();
+  // wait and then drive to corner
+  pros::delay(2000);
+  i.Stop();
+  chassis.set_drive_pid(100, DRIVE_SPEED);
 
-  chassis.set_turn_pid(180, TURN_SPEED);
-  chassis.wait_drive();
+#pragma region turns towards middle ring stack not used
+// chassis.set_turn_pid(45, TURN_SPEED);
+// i.Forward();
+// chassis.wait_drive();
 
-  chassis.set_drive_pid(50, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(30, DRIVE_SPEED - 90);
-  chassis.wait_drive();
+// // drives into rings
+// chassis.set_drive_pid(80, DRIVE_SPEED - 20);
+// chassis.wait_drive();
+// chassis.set_drive_pid(10, 50);
+// chassis.wait_drive();
 
-  // drive to corner code
+// chassis.set_turn_pid(180, TURN_SPEED);
+// chassis.wait_drive();
 
-  // //turns to and drive near corner
-  // chassis.set_turn_pid(-10, TURN_SPEED);
-  // chassis.wait_drive();
-  // chassis.set_drive_pid(70, DRIVE_SPEED);
-  // chassis.wait_drive();
+// chassis.set_drive_pid(50, DRIVE_SPEED);
+// chassis.wait_drive();
+// chassis.set_drive_pid(30, DRIVE_SPEED - 90);
+// chassis.wait_drive();
+#pragma endregion
 
-  // //turns and drives into corner
-  // chassis.set_turn_pid(-75, TURN_SPEED);
-  // chassis.wait_drive();
-  // chassis.set_drive_pid(100, DRIVE_SPEED);
-  // chassis.wait_drive();
+#pragma region drive to corner code not used
+// //turns to and drive near corner
+// chassis.set_turn_pid(-10, TURN_SPEED);
+// chassis.wait_drive();
+// chassis.set_drive_pid(70, DRIVE_SPEED);
+// chassis.wait_drive();
 
-  // // turns drops mogo and goes to ladder
-  // chassis.set_drive_pid(-35, DRIVE_SPEED);
-  // chassis.wait_drive();
-  // chassis.set_turn_pid(120, TURN_SPEED);
-  // chassis.wait_drive();
-  // m.set_value(false);
-  // i.Stop();
-  // chassis.set_drive_pid(115, DRIVE_SPEED);
-  // chassis.wait_drive();
-  // chassis.set_drive_pid(30, DRIVE_SPEED - 90);
+// //turns and drives into corner
+// chassis.set_turn_pid(-75, TURN_SPEED);
+// chassis.wait_drive();
+// chassis.set_drive_pid(100, DRIVE_SPEED);
+// chassis.wait_drive();
+
+// // turns drops mogo and goes to ladder
+// chassis.set_drive_pid(-35, DRIVE_SPEED);
+// chassis.wait_drive();
+// chassis.set_turn_pid(120, TURN_SPEED);
+// chassis.wait_drive();
+// m.set_value(false);
+// i.Stop();
+// chassis.set_drive_pid(115, DRIVE_SPEED);
+// chassis.wait_drive();
+// chassis.set_drive_pid(30, DRIVE_SPEED - 90);
+#pragma endregion
 }
 
+void soloAWPblue()
+{
+  // blue solo awp code doesn't get middle ring
+  i.ChangeSpeed(115);
+
+  // drive forwards
+  chassis.set_drive_pid(-114, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // turns toward mogo
+  chassis.set_turn_pid(-36, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drives up, graps mogo and score preload
+  chassis.set_drive_pid(-20, DRIVE_SPEED - 70);
+  chassis.wait_drive();
+  m.set_value(true);
+  pros::delay(300);
+  i.Forward();
+
+  // turn and back up into rings
+  chassis.set_turn_pid(10, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drops mogo
+  m.set_value(false);
+  chassis.set_drive_pid(50, DRIVE_SPEED - 40);
+  chassis.wait_drive();
+  pros::delay(300);
+  i.Stop();
+  // hopefully has ring inside bot
+  chassis.set_drive_pid(45, DRIVE_SPEED);
+  chassis.wait_drive();
+  DRIVE_SPEED -= 10;
+
+  // turns towards the other mogo
+  TURN_SPEED -= 30;
+  chassis.set_turn_pid(48, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drives and grabs mogo
+  chassis.set_drive_pid(-65, DRIVE_SPEED - 30);
+  chassis.wait_drive();
+  pros::delay(100);
+  m.set_value(true);
+  pros::delay(300);
+  i.Forward();
+
+  // wait and then drive to corner
+  pros::delay(2000);
+  i.Stop();
+  chassis.set_drive_pid(100, DRIVE_SPEED);
+}
+
+void SafeAutonBlue()
+{
+  DRIVE_SPEED -= 40;
+  // head for mobile goal and clamp
+  chassis.set_drive_pid(-55, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-37, TURN_SPEED - 20);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-30, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  m.set_value(true);
+  pros::delay(300);
+
+  // load preload and grab next ring
+  i.Forward();
+  chassis.set_turn_pid(-110, TURN_SPEED);
+  chassis.wait_drive();
+
+  // accont for ring stuck drive into ring stack
+  pros::delay(2000);
+  i.Reverse();
+  pros::delay(1000);
+  i.Forward();
+  chassis.set_drive_pid(30, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  pros::delay(3000);
+  i.Reverse();
+  pros::delay(500);
+  i.Forward();
+}
+
+void OffLineAuton()
+{
+  pros::delay(4000);
+  //chassis.set_drive_pid(50, DRIVE_SPEED - 70);
+}
 ///
 // Drive Example
 ///
@@ -596,133 +699,22 @@ void offAuton()
 
 // skills autonomous routine //no while loop is needed as it is preset to 1 minute
 void skillsAuton()
-{
-  // static pros::Motor cataleft(12, pros::E_MOTOR_GEARSET_36);
-  // static pros::Motor cataright(-19, pros::E_MOTOR_GEARSET_36); // comment out with prog
-  //  static pros::Motor cataright(9000, pros::E_MOTOR_GEARSET_36); // comment out with real bort
-
-  static pros::Motor cata(3, pros::E_MOTOR_GEARSET_36);
-
-  // static pros::Motor_Group cata({cataleft, cataright});
-  // pros::Rotation rot(2);
-
-  pros::ADIDigitalOut blocker('A');
-  pros::ADIDigitalOut rWing('B');
-  pros::ADIDigitalOut lWing('C');
-
-  // rot.set_position(0);
-
-  int turnChange = 23;
-
-  cata.move(127);
-  pros::delay(41300);
-
-  // pros::delay(2600);
-  cata.move(0);
-
-  chassis.set_turn_pid(-110, 127);
+{ // drive into mogo and score preload
+  i.ChangeSpeed(127);
+  chassis.set_drive_pid(-8, DRIVE_SPEED - 60);
+  chassis.wait_drive();
+  m.set_value(true);
+  pros::delay(800);
+ 
+  // turn to corner
+  chassis.set_turn_pid(75, TURN_SPEED - 10);
+  pros::delay(400);
+   i.Forward();
   chassis.wait_drive();
 
-  chassis.set_drive_pid(65, 127);
-  chassis.wait_until(65);
-
-  chassis.set_turn_pid(-80, 127);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(130, 127);
-  chassis.wait_until(45);
-
-  chassis.set_drive_pid(-130, 127);
-  chassis.wait_until(-25);
-
-  chassis.set_turn_pid(60, 127);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(180, 127);
-  chassis.wait_until(140);
-
-  chassis.set_turn_pid(23, 127);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(330, 127);
-  chassis.wait_until(290);
-
-  // Wings.set_value(false);
-
-  chassis.set_turn_pid(turnChange + -50, 90);
-  // chassis.set_drive_pid(120, 127);
-  chassis.wait_drive();
-
-  // Wings.set_value(true);
-
-  chassis.set_drive_pid(220, 127);
-  chassis.wait_until(150);
-
-  // Wings.set_value(false);
-
-  chassis.set_drive_pid(-220, 127);
-  chassis.wait_until(-20);
-
-  chassis.set_turn_pid(turnChange + -160, 90);
-  // chassis.set_drive_pid(120, 127);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(220, 127);
-  chassis.wait_until(120);
-
-  chassis.set_turn_pid(turnChange + -40, 127);
-  chassis.wait_drive();
-
-  lWing.set_value(true);
-  rWing.set_value(true);
-
-  chassis.set_drive_pid(200, 127);
-  chassis.wait_until(123);
-
-  lWing.set_value(false);
-  rWing.set_value(false);
-
-  chassis.set_turn_pid(turnChange + 0, 127);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(-150, 127);
-  chassis.wait_until(-100);
-
-  chassis.set_turn_pid(turnChange + 90, 127);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(-150, 127);
-  chassis.wait_until(-100);
-
-  chassis.set_turn_pid(turnChange + 20, 127);
-  chassis.wait_drive();
-
-  lWing.set_value(true);
-  rWing.set_value(true);
-
-  chassis.set_drive_pid(160, 127);
-  chassis.wait_until(120);
-
-  lWing.set_value(false);
-  rWing.set_value(false);
-
-  chassis.set_turn_pid(turnChange + -20, 127);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(-160, 127);
-  chassis.wait_until(-100);
-
-  chassis.set_turn_pid(turnChange + 0, 127);
-  chassis.wait_drive();
-
-  lWing.set_value(true);
-  rWing.set_value(true);
-
-  chassis.set_drive_pid(160, 127);
-  chassis.wait_until(120);
-
-  while (1)
-  {
-    pros::delay(100);
-  }
+  chassis.set_drive_pid(-120, DRIVE_SPEED - 60);
+  pros::delay(5000);
+  chassis.set_drive_pid(0, 0);
+  pros::delay(5000);
+  i.Stop();
 }
