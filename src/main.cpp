@@ -220,11 +220,12 @@ void opcontrol()
 
   // intake subsystem
   Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
+  Intake hooks(Motor(5, pros::E_MOTOR_GEARSET_18));
 
   // arm subsystem
   RotationSensor rotSen(14);
   rotSen.Zero();
-  Arm arm(Motor(12, pros::E_MOTOR_GEARSET_36), rotSen);
+  Arm arm(Motor(-12, pros::E_MOTOR_GEARSET_36), rotSen);
 
   while (true)
   {
@@ -247,6 +248,7 @@ void opcontrol()
 
     // motors
     intake.Tick();
+    hooks.Tick();
 
     // sensors
     rotSen.Tick();
@@ -291,14 +293,17 @@ void opcontrol()
     if (button_R2.IsPressed())
     {
       intake.Forward();
+      hooks.Forward();
     }
     else if (button_L2.IsPressed())
     {
       intake.Reverse();
+      hooks.Reverse();
     }
     else
     {
       intake.Stop();
+      hooks.Stop();
     }
 
 #pragma region old intake code to work with shift button
