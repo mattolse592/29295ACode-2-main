@@ -38,5 +38,13 @@ public:
     void ChangeSpeed(int speed) {
         Speed_ = speed;
     }
+
+    void Discard() {
+        Forward(); 
+        pros::delay(500);
+        Reverse();
+        pros::delay(300);
+    }
+
 };
 #endif  // INTAKE_HPP

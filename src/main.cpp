@@ -2,6 +2,7 @@
 #include "variables.hpp"
 #include <vector>
 
+#include "OpticalSensor.hpp"
 #include "ToggleButton.hpp"
 #include "HoldButton.hpp"
 #include "ShiftedButton.hpp"
@@ -99,10 +100,10 @@ void initialize()
       // Auton("Runs Red Safe autonomous", SafeAutonRed),
       // Auton("Runs blue solo AWP autonomous", soloAWPblue),
       // Auton("Runs blue Safe autonomous", SafeAutonBlue),
-       Auton(" get off the line Auton", OffLineAuton),
+      Auton(" get off the line Auton", OffLineAuton),
 
-      //Auton(" Testing skills auton", skillsAuton),
-      
+      // Auton(" Testing skills auton", skillsAuton),
+
       // Auton("Example Drive\n\nDrive forward and come back.", drive_example),
       // Auton("Example Turn\n\nTurn 3 times.", turn_example),
       // Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
@@ -205,6 +206,7 @@ void opcontrol()
   Stick rightX(master, ANALOG_RIGHT_X);
 
   ToggleButton button_A(master, DIGITAL_A);
+  ToggleButton button_B(master, DIGITAL_B);
   HoldButton shift_Button(master, DIGITAL_R1);
   HoldButton button_R2(master, DIGITAL_R2);
   HoldButton button_L2(master, DIGITAL_L2);
@@ -217,15 +219,30 @@ void opcontrol()
 
   // pneumatics
   MogoMech mogo('A');
+  MogoMech doinker('D');
+
+  // colour sensor
+  OpticalSensor o(1);
 
   // intake subsystem
-  Intake intake(Motor(-6, pros::E_MOTOR_GEARSET_06));
-  Intake hooks(Motor(5, pros::E_MOTOR_GEARSET_18));
+  Intake intake(Motor(5, pros::E_MOTOR_GEARSET_06));
+  Intake hooks(Motor(-6, pros::E_MOTOR_GEARSET_18));
 
   // arm subsystem
   RotationSensor rotSen(14);
   rotSen.Zero();
   Arm arm(Motor(-12, pros::E_MOTOR_GEARSET_36), rotSen);
+
+  // //colour sort test
+  // while (true)
+  // {
+  //   intake.Forward();
+  //   o.Tick();
+
+  //   if (o.Hue_ >= 210 && o.Hue_ <= 230) {
+  //     intake.Discard();
+  //   }
+  // }
 
   while (true)
   {
@@ -239,6 +256,7 @@ void opcontrol()
 
     // raw buttons
     button_A.Tick();
+    button_B.Tick();
     button_R2.Tick();
     button_L2.Tick();
     shift_Button.Tick();
@@ -286,6 +304,18 @@ void opcontrol()
     {
       mogo.Deactivate();
     }
+
+    // //
+    // // Doinker code
+    // //
+    // if (button_A.IsOn())
+    // {
+    //   doinker.Activate();
+    // }
+    // else
+    // {
+    //   doinker.Deactivate();
+    // }
 
     //
     //  Intake

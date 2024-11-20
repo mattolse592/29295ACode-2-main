@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "NOO AUTOAUTON TEST",
+    "project_name": "NOO DOniker TEST",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -189,9 +189,9 @@
       }
     },
     "upload_options": {
-      "description": "pookle",
-      "icon": "X",
-      "slot": 7
+      "description": "finkle",
+      "icon": "clawbot",
+      "slot": 8
     }
   }
 }

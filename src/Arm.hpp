@@ -11,7 +11,7 @@ class Arm
 private:
     Motor Motor_;
     RotationSensor RotationSensor_;
-    PIDController pid_ = PIDController(2.4, 0.1, 9.0, 0.0);
+    PIDController pid_ = PIDController(2.4, 0.05, 9.0, 0.0);
 
     bool manualTakeover_ = false;
 
@@ -110,7 +110,7 @@ private:
 
     void Load()
     {
-        pid_.setTarget(26.0);
+        pid_.setTarget(23.0);
     }
 
     void Reach()

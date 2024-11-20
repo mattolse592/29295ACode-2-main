@@ -8,7 +8,7 @@ class ToggleButton
 
 private:
     pros::Controller &Master_;
-    bool Pressed_;
+    bool Pressed_ = false;
     pros::controller_digital_e_t Button_;
 
 public:
