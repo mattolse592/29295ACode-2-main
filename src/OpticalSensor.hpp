@@ -8,10 +8,11 @@ class OpticalSensor
 
 private:
     pros::Optical OpticalSensor_;
-    
+    int Hue_;
+    int Proximity_;
 
 public:
-    int Hue_;
+    
     OpticalSensor(char PortNum)
         : OpticalSensor_{PortNum}
     {
@@ -19,10 +20,17 @@ public:
 
     void Tick()
     {
-        
+        Proximity_ = OpticalSensor_.get_proximity();
         Hue_ = OpticalSensor_.get_hue();
     }
 
+    int GetHue() {
+        return Hue_;
+    }
+
+    int GetProx() {
+        return Proximity_;
+    }
  
    
 };

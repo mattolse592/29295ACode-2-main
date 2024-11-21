@@ -181,6 +181,7 @@ void autonomous()
  */
 void opcontrol()
 {
+  int badColorDetected = 0;
 
   // drive variables to calulate speeds with curve
   double power;
@@ -270,6 +271,7 @@ void opcontrol()
 
     // sensors
     rotSen.Tick();
+    o.Tick();
 
     // arm
     arm.Tick();
@@ -305,17 +307,17 @@ void opcontrol()
       mogo.Deactivate();
     }
 
-    // //
-    // // Doinker code
-    // //
-    // if (button_A.IsOn())
-    // {
-    //   doinker.Activate();
-    // }
-    // else
-    // {
-    //   doinker.Deactivate();
-    // }
+    //
+    // Doinker code
+    //
+    if (button_B.IsOn())
+    {
+      doinker.Activate();
+    }
+    else
+    {
+      doinker.Deactivate();
+    }
 
     //
     //  Intake
@@ -371,14 +373,28 @@ void opcontrol()
 
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
 
+    // //
+    // // color sort ONLY WORKS FOR RED ALLIANCE
+    // //
+    // if (o.GetHue() > 205 && o.GetHue() < 220 && o.GetProx() > 200)
+    // {
+    //   badColorDetected = 20;
+    // }
+    // else if (badColorDetected > 0)
+    // {
+    //   badColorDetected -= 1;
+
+    //   hooks.Reverse();
+    // }
+
     //
     // writing to screen
     //
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
-    master.set_text(0, 0, "MotSped: " + std::to_string(arm.GetPIDValue()));
+    master.set_text(0, 0, "MotSped: " + std::to_string(badColorDetected));
 
     ez::print_to_screen("Rot: " + std::to_string(arm.GetPosition()));
 
-    pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+    pros::delay(8);//ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }

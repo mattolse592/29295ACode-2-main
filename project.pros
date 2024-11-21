@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "NOO DOniker TEST",
+    "project_name": "NOO Color sort",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -189,9 +189,9 @@
       }
     },
     "upload_options": {
-      "description": "finkle",
-      "icon": "clawbot",
-      "slot": 8
+      "description": "pingo",
+      "icon": "X",
+      "slot": 7
     }
   }
 }
