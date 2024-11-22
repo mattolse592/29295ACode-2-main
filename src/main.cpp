@@ -182,8 +182,9 @@ void autonomous()
  */
 void opcontrol()
 {
-  int badColorDetected = 0;
+  int reverseTimer = 0;
   bool ringDetected = false;
+  bool badColour = false;
 
   // drive variables to calulate speeds with curve
   double power;
@@ -391,19 +392,32 @@ void opcontrol()
     if (limSwitch.GetValue() == true)
     {
       ringDetected = true;
+      badColour = false;
+
+      if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150) {
+        badColour = true;
+      }
     }
 
+    // blue bad
     if (limSwitch.GetValue() == false && ringDetected == true)
     {
-      badColorDetected = 20;
+      reverseTimer = 20;
       ringDetected = false;
     }
 
-    if (badColorDetected > 0)
+    // // red bad
+    // if (limSwitch.GetValue() == false && ringDetected == true && o.GetHue() >= 320 && o.GetProx() > 150)
+    // {
+    //   badColorDetected = 20;
+    //   ringDetected = false;
+    // }
+
+    if (reverseTimer > 0 && badColour)
     {
       hooks.Reverse();
     }
-    badColorDetected -= 1;
+    reverseTimer -= 1;
 
     // old color sort code without limit switch works 50%
     //  if (o.GetHue() > 170 && o.GetHue() < 240 && o.GetProx() > 150 && ringDetected == false)
@@ -427,7 +441,7 @@ void opcontrol()
     // writing to screen
     //
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
-    master.set_text(0, 0, "MotSped: " + std::to_string(badColorDetected));
+    master.set_text(0, 0, "MotSped: " + std::to_string(reverseTimer));
 
     ez::print_to_screen("Rot: " + std::to_string(arm.GetPosition()));
 
