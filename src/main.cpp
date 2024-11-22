@@ -182,7 +182,8 @@ void autonomous()
 void opcontrol()
 {
   int badColorDetected = 0;
-
+  bool ringDetected = false;
+  
   // drive variables to calulate speeds with curve
   double power;
   double powerC;
@@ -234,6 +235,8 @@ void opcontrol()
   rotSen.Zero();
   Arm arm(Motor(-12, pros::E_MOTOR_GEARSET_36), rotSen);
 
+  // turn color sensor light on
+  o.LEDon();
   // //colour sort test
   // while (true)
   // {
@@ -247,6 +250,8 @@ void opcontrol()
 
   while (true)
   {
+
+    int counter = 0;
     // tick everything
 
     // raw sticks
@@ -373,11 +378,13 @@ void opcontrol()
 
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
 
-    // //
-    // // color sort ONLY WORKS FOR RED ALLIANCE
-    // //
-    // if (o.GetHue() > 205 && o.GetHue() < 220 && o.GetProx() > 200)
+    //
+    // color sort ONLY WORKS FOR RED ALLIANCE
+    //
+
+    // if (o.GetHue() > 170 && o.GetHue() < 240 && o.GetProx() > 150)
     // {
+
     //   badColorDetected = 20;
     // }
     // else if (badColorDetected > 0)
@@ -387,6 +394,27 @@ void opcontrol()
     //   hooks.Reverse();
     // }
 
+    if (o.GetHue() > 170 && o.GetHue() < 240 && o.GetProx() > 150 && ringDetected == false)
+    {
+      badColorDetected = 15;
+      ringDetected = true;
+    }
+    else if (ringDetected == true)
+    {
+      badColorDetected -= 1;
+    }
+
+    if (badColorDetected < 0 && ringDetected == true)
+    {
+      hooks.Reverse();
+    }
+
+    if (badColorDetected < -20)
+    {
+      ringDetected = false;
+    }
+
+
     //
     // writing to screen
     //
@@ -395,6 +423,6 @@ void opcontrol()
 
     ez::print_to_screen("Rot: " + std::to_string(arm.GetPosition()));
 
-    pros::delay(8);//ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+    pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }

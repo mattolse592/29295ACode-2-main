@@ -10,7 +10,7 @@ private:
     pros::Optical OpticalSensor_;
     int Hue_;
     int Proximity_;
-
+    
 public:
     
     OpticalSensor(char PortNum)
@@ -31,7 +31,10 @@ public:
     int GetProx() {
         return Proximity_;
     }
- 
+    
+    void LEDon() {
+        OpticalSensor_.set_led_pwm(100);
+    }
    
 };
 #endif // OPTICALSENSOR_HPP

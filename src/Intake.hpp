@@ -41,7 +41,7 @@ public:
 
     void Discard() {
         Forward(); 
-        pros::delay(500);
+        pros::delay(1000);
         Reverse();
         pros::delay(300);
     }
