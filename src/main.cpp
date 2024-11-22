@@ -13,6 +13,7 @@
 #include "RotationSensor.hpp"
 #include "Arm.hpp"
 #include "TapButton.hpp"
+#include "LimitSwitch.hpp"
 
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
@@ -183,7 +184,7 @@ void opcontrol()
 {
   int badColorDetected = 0;
   bool ringDetected = false;
-  
+
   // drive variables to calulate speeds with curve
   double power;
   double powerC;
@@ -226,6 +227,9 @@ void opcontrol()
   // colour sensor
   OpticalSensor o(1);
 
+  // limit switch
+  LimitSwitch limSwitch('B');
+
   // intake subsystem
   Intake intake(Motor(5, pros::E_MOTOR_GEARSET_06));
   Intake hooks(Motor(-6, pros::E_MOTOR_GEARSET_18));
@@ -237,6 +241,7 @@ void opcontrol()
 
   // turn color sensor light on
   o.LEDon();
+
   // //colour sort test
   // while (true)
   // {
@@ -277,6 +282,7 @@ void opcontrol()
     // sensors
     rotSen.Tick();
     o.Tick();
+    limSwitch.Tick();
 
     // arm
     arm.Tick();
@@ -381,39 +387,41 @@ void opcontrol()
     //
     // color sort ONLY WORKS FOR RED ALLIANCE
     //
-
-    // if (o.GetHue() > 170 && o.GetHue() < 240 && o.GetProx() > 150)
-    // {
-
-    //   badColorDetected = 20;
-    // }
-    // else if (badColorDetected > 0)
-    // {
-    //   badColorDetected -= 1;
-
-    //   hooks.Reverse();
-    // }
-
-    if (o.GetHue() > 170 && o.GetHue() < 240 && o.GetProx() > 150 && ringDetected == false)
+    //no color currently
+    if (limSwitch.GetValue() == true)
     {
-      badColorDetected = 15;
       ringDetected = true;
     }
-    else if (ringDetected == true)
-    {
-      badColorDetected -= 1;
-    }
 
-    if (badColorDetected < 0 && ringDetected == true)
+    if (limSwitch.GetValue() == false && ringDetected == true)
     {
-      hooks.Reverse();
-    }
-
-    if (badColorDetected < -20)
-    {
+      badColorDetected = 20;
       ringDetected = false;
     }
 
+    if (badColorDetected > 0)
+    {
+      hooks.Reverse();
+    }
+    badColorDetected -= 1;
+
+    // old color sort code without limit switch works 50%
+    //  if (o.GetHue() > 170 && o.GetHue() < 240 && o.GetProx() > 150 && ringDetected == false)
+    //  {
+    //    badColorDetected = 15;
+    //    ringDetected = true;
+    //  }
+    //  else if (ringDetected == true)
+    //  {
+    //    badColorDetected -= 1;
+    //  }
+
+    //
+
+    // if (badColorDetected < -20)
+    // {
+    //   ringDetected = false;
+    // }
 
     //
     // writing to screen
