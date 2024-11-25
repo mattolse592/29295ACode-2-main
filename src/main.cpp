@@ -218,7 +218,7 @@ void opcontrol()
   TapButton button_up(master, DIGITAL_UP);
   TapButton button_down(master, DIGITAL_DOWN);
 
-  // ShiftedButton clampActivator(button_A, shift_Button);
+  ShiftedButton clampActivator(button_L2, shift_Button);
   // code for if you want to lock unclamping behind the shift button. Make sure to tick() if added.
 
   // pneumatics
@@ -275,6 +275,7 @@ void opcontrol()
     button_L1.Tick();
     button_up.Tick();
     button_down.Tick();
+    clampActivator.Tick();
 
     // motors
     intake.Tick();
@@ -310,7 +311,7 @@ void opcontrol()
     //
     // Mogo code
     //
-    if (button_A.IsOn())
+    if (clampActivator.IsOn())
     {
       mogo.Activate();
     }
@@ -336,35 +337,35 @@ void opcontrol()
     //
     if (button_R2.IsPressed())
     {
-      intake.Forward();
-      hooks.Forward();
-    }
-    else if (button_L2.IsPressed())
-    {
-      intake.Reverse();
-      hooks.Reverse();
+      if (shift_Button.IsPressed())
+      {
+        intake.Reverse();
+      }
+      else
+      {
+        intake.Forward();
+      }
     }
     else
     {
       intake.Stop();
-      hooks.Stop();
     }
 
-#pragma region old intake code to work with shift button
+#pragma region old intake code no shift button
     // if (button_R2.IsPressed())
     // {
-    //   if (shift_Button.IsPressed())
-    //   {
-    //     intake.Reverse();
-    //   }
-    //   else
-    //   {
-    //     intake.Forward();
-    //   }
+    //   intake.Forward();
+    //   hooks.Forward();
+    // }
+    // else if (button_L2.IsPressed())
+    // {
+    //   intake.Reverse();
+    //   hooks.Reverse();
     // }
     // else
     // {
     //   intake.Stop();
+    //   hooks.Stop();
     // }
 #pragma endregion
 
@@ -385,16 +386,17 @@ void opcontrol()
 
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
 
+#pragma region Color Sort
     //
     // color sort ONLY WORKS FOR RED ALLIANCE
     //
-    //no color currently
     if (limSwitch.GetValue() == true)
     {
       ringDetected = true;
       badColour = false;
 
-      if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150) {
+      if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
+      {
         badColour = true;
       }
     }
@@ -418,24 +420,7 @@ void opcontrol()
       hooks.Reverse();
     }
     reverseTimer -= 1;
-
-    // old color sort code without limit switch works 50%
-    //  if (o.GetHue() > 170 && o.GetHue() < 240 && o.GetProx() > 150 && ringDetected == false)
-    //  {
-    //    badColorDetected = 15;
-    //    ringDetected = true;
-    //  }
-    //  else if (ringDetected == true)
-    //  {
-    //    badColorDetected -= 1;
-    //  }
-
-    //
-
-    // if (badColorDetected < -20)
-    // {
-    //   ringDetected = false;
-    // }
+#pragma endregion
 
     //
     // writing to screen
