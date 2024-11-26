@@ -2,7 +2,9 @@
 #include "Arm.hpp"
 #include "RotationSensor.hpp"
 #include "Motor.hpp"
+#include "LimitSwitch.hpp"
 #include "Intake.hpp"
+#include "OpticalSensor.hpp"
 
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
@@ -20,7 +22,14 @@ const int SWING_SPEED = 90;
 // Constants
 ///
 pros::ADIDigitalOut m('A');
-Intake i(Motor(-6, pros::E_MOTOR_GEARSET_06));
+LimitSwitch limSwitch('B');
+OpticalSensor o(1);
+ Intake intake(Motor(5, pros::E_MOTOR_GEARSET_06));
+  Intake hooks(Motor(-6, pros::E_MOTOR_GEARSET_18));
+
+int reverseTimer = 0;
+bool ringDetected = false;
+bool badColour = false;
 
 // It's best practice to tune constants when the robot is empty and with heavier game objects, or with lifts up vs down.
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
@@ -72,6 +81,39 @@ void modified_exit_condition()
   chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
+void colourSort() {
+while (pros::competition::is_autonomous())
+{
+  hooks.Forward();
+  
+  if (limSwitch.GetValue() == true)
+  {
+    ringDetected = true;
+    badColour = false;
+
+    if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
+    {
+      badColour = true;
+    }
+    }
+
+    // blue bad
+    if (limSwitch.GetValue() == false && ringDetected == true)
+    {
+      reverseTimer = 20;
+      ringDetected = false;
+    }
+
+    if (reverseTimer > 0 && badColour)
+    {
+      hooks.Reverse();
+    }
+    reverseTimer -= 1;
+    pros::delay(10);
+}
+}
+
+
 void SafeAutonRed()
 {
   DRIVE_SPEED -= 40;
@@ -86,24 +128,29 @@ void SafeAutonRed()
   pros::delay(200);
 
   // load preload and grab next ring
-  i.Forward();
+ //intake
   chassis.set_turn_pid(110, TURN_SPEED);
   chassis.wait_drive();
 
   // accont for ring stuck drive into ring stack
   pros::delay(2000);
-  i.Reverse();
+ //intakeReverse();
   pros::delay(1000);
-  i.Forward();
+ //intake
   chassis.set_drive_pid(30, DRIVE_SPEED - 20);
   chassis.wait_drive();
   pros::delay(3000);
 }
 
+
+
 void soloAWPred()
 {
+  pros::Task sort(colourSort);
+
+
   // red solo awp code doesn't get middle ring
-  i.ChangeSpeed(115);
+ //intakeChangeSpeed(115);
 
   // drive forwards
   chassis.set_drive_pid(-115, DRIVE_SPEED);
@@ -118,7 +165,7 @@ void soloAWPred()
   chassis.wait_drive();
   m.set_value(true);
   pros::delay(300);
-  i.Forward();
+ //intake
 
   // turn and back up into rings
   chassis.set_turn_pid(-10, TURN_SPEED);
@@ -129,7 +176,7 @@ void soloAWPred()
   chassis.set_drive_pid(50, DRIVE_SPEED - 40);
   chassis.wait_drive();
   pros::delay(200);
-  i.Stop();
+ //intakeStop();
   // hopefully has ring inside bot
   chassis.set_drive_pid(45, DRIVE_SPEED);
   chassis.wait_drive();
@@ -146,16 +193,16 @@ void soloAWPred()
   pros::delay(100);
   m.set_value(true);
   pros::delay(300);
-  i.Forward();
+ //intake
 
   // wait and then drive to corner
   pros::delay(2000);
-  i.Stop();
+ //intakeStop();
   chassis.set_drive_pid(100, DRIVE_SPEED);
 
 #pragma region turns towards middle ring stack not used
 // chassis.set_turn_pid(45, TURN_SPEED);
-// i.Forward();
+////intake
 // chassis.wait_drive();
 
 // // drives into rings
@@ -192,7 +239,7 @@ void soloAWPred()
 // chassis.set_turn_pid(120, TURN_SPEED);
 // chassis.wait_drive();
 // m.set_value(false);
-// i.Stop();
+////intakeStop();
 // chassis.set_drive_pid(115, DRIVE_SPEED);
 // chassis.wait_drive();
 // chassis.set_drive_pid(30, DRIVE_SPEED - 90);
@@ -202,7 +249,7 @@ void soloAWPred()
 void soloAWPblue()
 {
   // blue solo awp code doesn't get middle ring
-  i.ChangeSpeed(115);
+ //intakeChangeSpeed(115);
 
   // drive forwards
   chassis.set_drive_pid(-114, DRIVE_SPEED);
@@ -217,7 +264,7 @@ void soloAWPblue()
   chassis.wait_drive();
   m.set_value(true);
   pros::delay(300);
-  i.Forward();
+ //intake
 
   // turn and back up into rings
   chassis.set_turn_pid(10, TURN_SPEED);
@@ -228,7 +275,7 @@ void soloAWPblue()
   chassis.set_drive_pid(50, DRIVE_SPEED - 40);
   chassis.wait_drive();
   pros::delay(300);
-  i.Stop();
+ //intakeStop();
   // hopefully has ring inside bot
   chassis.set_drive_pid(45, DRIVE_SPEED);
   chassis.wait_drive();
@@ -245,11 +292,11 @@ void soloAWPblue()
   pros::delay(100);
   m.set_value(true);
   pros::delay(300);
-  i.Forward();
+ //intake
 
   // wait and then drive to corner
   pros::delay(2000);
-  i.Stop();
+ //intakeStop();
   chassis.set_drive_pid(100, DRIVE_SPEED);
 }
 
@@ -267,21 +314,21 @@ void SafeAutonBlue()
   pros::delay(300);
 
   // load preload and grab next ring
-  i.Forward();
+ //intake
   chassis.set_turn_pid(-110, TURN_SPEED);
   chassis.wait_drive();
 
   // accont for ring stuck drive into ring stack
   pros::delay(2000);
-  i.Reverse();
+ //intakeReverse();
   pros::delay(1000);
-  i.Forward();
+ //intake
   chassis.set_drive_pid(30, DRIVE_SPEED - 20);
   chassis.wait_drive();
   pros::delay(3000);
-  i.Reverse();
+ //intakeReverse();
   pros::delay(500);
-  i.Forward();
+ //intake
 }
 
 void OffLineAuton()
@@ -700,7 +747,7 @@ void offAuton()
 // skills autonomous routine //no while loop is needed as it is preset to 1 minute
 void skillsAuton()
 { // drive into mogo and score preload
-  i.ChangeSpeed(127);
+ //intakeChangeSpeed(127);
   chassis.set_drive_pid(-8, DRIVE_SPEED - 60);
   chassis.wait_drive();
   m.set_value(true);
@@ -709,12 +756,12 @@ void skillsAuton()
   // turn to corner
   chassis.set_turn_pid(75, TURN_SPEED - 10);
   pros::delay(400);
-   i.Forward();
+  //intake
   chassis.wait_drive();
 
   chassis.set_drive_pid(-120, DRIVE_SPEED - 60);
   pros::delay(5000);
   chassis.set_drive_pid(0, 0);
   pros::delay(5000);
-  i.Stop();
+ //intakeStop();
 }

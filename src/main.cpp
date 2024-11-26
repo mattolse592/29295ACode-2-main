@@ -101,7 +101,7 @@ void initialize()
       // Auton("Runs Red Safe autonomous", SafeAutonRed),
       // Auton("Runs blue solo AWP autonomous", soloAWPblue),
       // Auton("Runs blue Safe autonomous", SafeAutonBlue),
-      Auton(" get off the line Auton", OffLineAuton),
+      Auton(" get off the line Auton", soloAWPred),
 
       // Auton(" Testing skills auton", skillsAuton),
 
@@ -191,6 +191,9 @@ void autonomous()
 //  TODO make button to zero the arm if it gets out of allignment
 //  TODO make button to turn off color sorter *PRIORITY BUTTON*
 //  TODO write stats to screen
+
+
+
 void opcontrol()
 {
   int reverseTimer = 0;

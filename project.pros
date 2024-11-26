@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "YESSSS Color sort",
+    "project_name": "task Color test",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -191,7 +191,7 @@
     "upload_options": {
       "description": "pingo",
       "icon": "X",
-      "slot": 7,
+      "slot": 2,
       "after": "none"
     }
   }
