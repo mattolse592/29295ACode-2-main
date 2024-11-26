@@ -180,6 +180,17 @@ void autonomous()
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+// todo list
+//
+//
+//  TODO make shift button half the speed of the robot and test it || DONE half
+//  TODO ensure that mogo clamp and lock works
+//  TODO make arm able to go back one position in the cycle
+//  TODO test if arm is able to score on alliance stake
+//  TODO make button to zero the arm if it gets out of allignment
+//  TODO make button to turn off color sorter *PRIORITY BUTTON*
+//  TODO write stats to screen
 void opcontrol()
 {
   int reverseTimer = 0;
@@ -215,8 +226,6 @@ void opcontrol()
   HoldButton button_R2(master, DIGITAL_R2);
   HoldButton button_L2(master, DIGITAL_L2);
   TapButton button_L1(master, DIGITAL_L1);
-  TapButton button_up(master, DIGITAL_UP);
-  TapButton button_down(master, DIGITAL_DOWN);
 
   ShiftedButton clampActivator(button_L2, shift_Button);
   // code for if you want to lock unclamping behind the shift button. Make sure to tick() if added.
@@ -243,17 +252,7 @@ void opcontrol()
   // turn color sensor light on
   o.LEDon();
 
-  // //colour sort test
-  // while (true)
-  // {
-  //   intake.Forward();
-  //   o.Tick();
-
-  //   if (o.Hue_ >= 210 && o.Hue_ <= 230) {
-  //     intake.Discard();
-  //   }
-  // }
-
+  //DRIVER CONTROL LOOP
   while (true)
   {
 
@@ -272,9 +271,7 @@ void opcontrol()
     button_R2.Tick();
     button_L2.Tick();
     shift_Button.Tick();
-    button_L1.Tick();
-    button_up.Tick();
-    button_down.Tick();
+    button_L1.Tick(shift_Button.IsPressed());
     clampActivator.Tick();
 
     // motors
@@ -299,6 +296,12 @@ void opcontrol()
     // gets turn value and calculates curve
     turn = -rightX.GetPosition();
     turnC = tCurve * ((1 - tCoefficient) * turn) + ((tCoefficient * pow(turn, 3)) / 16129);
+
+    if (shift_Button.IsPressed())
+    {
+      powerC = powerC / 2;
+      turnC = turnC / 2;
+    }
 
     // assigns motor speeds
     for (int i = 0; i < sideMotors; i++)

@@ -19,12 +19,23 @@ public:
         Button_ = button;
     }
 
-    void Tick()
+    void Tick(bool shifted_)
     {
-        if (Master_.get_digital_new_press(Button_)){
-            Pressed_ = Pressed_ + 1;
+        if (Master_.get_digital_new_press(Button_))
+        {
+            if (shifted_ == true)
+            {
+                Pressed_ -= 1;
+            }
+            else
+            {
+                Pressed_ = Pressed_ + 1;
+            }
+
             dePressed_ = true;
-        } else {
+        }
+        else
+        {
             dePressed_ = false;
         }
     }
@@ -33,8 +44,9 @@ public:
     {
         return Pressed_;
     }
-    bool IsPressed() {
+    bool IsPressed()
+    {
         return dePressed_;
     }
-}; 
-#endif  // TAPBUTTON_HPP
+};
+#endif // TAPBUTTON_HPP
