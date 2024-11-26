@@ -9,7 +9,7 @@ class ShiftedButton
 private:
     HoldButton &TriggerButton_;
     HoldButton &ShiftButton_;
-    bool Shifted_ = false;
+    bool Value_ = false;
 
 public:
     ShiftedButton(HoldButton &TriggerButton, HoldButton &ShiftButton)
@@ -20,16 +20,16 @@ public:
 
     void Tick()
     {
-        if (!TriggerButton_.IsPressed())
-        {
-            return;
+        if (ShiftButton_.IsPressed() == false && TriggerButton_.IsPressed()) {
+            Value_ = true;
+        } else if (ShiftButton_.IsPressed() == true && TriggerButton_.IsPressed()) {
+            Value_ = false;
         }
-        Shifted_ = ShiftButton_.IsPressed();
     }
 
     bool IsOn()
     {
-        return Shifted_;
+        return Value_;
     }
 };
 

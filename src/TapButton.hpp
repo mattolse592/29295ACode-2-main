@@ -19,19 +19,11 @@ public:
         Button_ = button;
     }
 
-    void Tick(bool shifted_)
+    void Tick()
     {
         if (Master_.get_digital_new_press(Button_))
         {
-            if (shifted_ == true)
-            {
-                Pressed_ -= 1;
-            }
-            else
-            {
-                Pressed_ = Pressed_ + 1;
-            }
-
+            Pressed_ = Pressed_ + 1;
             dePressed_ = true;
         }
         else

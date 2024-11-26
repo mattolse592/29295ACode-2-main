@@ -184,9 +184,9 @@ void autonomous()
 // todo list
 //
 //
-//  TODO make shift button half the speed of the robot and test it || DONE half
-//  TODO ensure that mogo clamp and lock works
-//  TODO make arm able to go back one position in the cycle
+//  TODO make shift button half the speed of the robot and test it || DONE 
+//  TODO ensure that mogo clamp and lock works || needs testing
+//  TODO make arm able to go back one position in the cycle with digital left button
 //  TODO test if arm is able to score on alliance stake
 //  TODO make button to zero the arm if it gets out of allignment
 //  TODO make button to turn off color sorter *PRIORITY BUTTON*
@@ -271,7 +271,7 @@ void opcontrol()
     button_R2.Tick();
     button_L2.Tick();
     shift_Button.Tick();
-    button_L1.Tick(shift_Button.IsPressed());
+    button_L1.Tick();
     clampActivator.Tick();
 
     // motors
@@ -343,15 +343,18 @@ void opcontrol()
       if (shift_Button.IsPressed())
       {
         intake.Reverse();
+        hooks.Reverse();
       }
       else
       {
         intake.Forward();
+        hooks.Forward();
       }
     }
     else
     {
       intake.Stop();
+      hooks.Stop();
     }
 
 #pragma region old intake code no shift button
