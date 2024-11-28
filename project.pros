@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "task Color test",
+    "project_name": "redSafe",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -190,8 +190,8 @@
     },
     "upload_options": {
       "description": "pingo",
-      "icon": "X",
-      "slot": 2,
+      "icon": "clawbot",
+      "slot": 5,
       "after": "none"
     }
   }
