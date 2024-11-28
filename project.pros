@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Color sort auton test",
+    "project_name": "soloRed",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -191,7 +191,7 @@
     "upload_options": {
       "description": "pingo",
       "icon": "planet",
-      "slot": 6,
+      "slot": 2,
       "after": "none"
     }
   }

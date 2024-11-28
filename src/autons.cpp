@@ -225,10 +225,6 @@ void SafeAutonRed()
 
 void soloAWPred()
 {
-  //  initializet();
-  // pros::delay(1000000);
-  // red solo awp code doesn't get middle ring
-  // intakeChangeSpeed(115);
 
   // drive forwards
 
@@ -242,10 +238,10 @@ void soloAWPred()
   // drives up, graps mogo and score preload
   chassis.set_drive_pid(-20, DRIVE_SPEED - 70);
   chassis.wait_drive();
+  pros::Task sortTask(ColorSortFunction);
   m.set_value(true);
   pros::delay(300);
-  hooks.Forward();
-  intake.Forward();
+ 
 
   // turn and back up into rings
   chassis.set_turn_pid(-10, TURN_SPEED);
@@ -266,8 +262,6 @@ void soloAWPred()
   chassis.wait_drive();
 
   // turns towards the other mogo
-
-  intake.Reverse();
   TURN_SPEED -= 30;
   chassis.set_turn_pid(-75, TURN_SPEED);
   chassis.wait_drive();
@@ -277,14 +271,23 @@ void soloAWPred()
   chassis.wait_drive();
   pros::delay(100);
   m.set_value(true);
-  intake.Forward();
   pros::delay(300);
 
   chassis.set_turn_pid(45, TURN_SPEED);
   chassis.wait_drive();
 
-  // intakeStop();
+  //drives to ring
   chassis.set_drive_pid(100, DRIVE_SPEED);
+  chassis.wait_drive();
+  pros::delay(800);
+  chassis.set_drive_pid(20, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  //turn and drive to ladder
+  chassis.set_turn_pid(-160, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(80, DRIVE_SPEED);
+  chassis.wait_drive();
 
 #pragma region turns towards middle ring stack not used
 // chassis.set_turn_pid(45, TURN_SPEED);
