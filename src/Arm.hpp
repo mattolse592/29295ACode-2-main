@@ -21,6 +21,7 @@ public:
         DOCK = 0,
         LOAD = 1,
         REACH = 2,
+        SCORE = 3,
         MANUAL = 4
     };
 
@@ -55,6 +56,8 @@ public:
             case REACH:
                 Reach();
                 break;
+            case SCORE:
+                Score();
             case MANUAL:
                 // at function here
                 break;
@@ -116,6 +119,10 @@ private:
     void Reach()
     {
         pid_.setTarget(124.0);
+    }
+
+    void Score() {
+        pid_.setTarget(135.0);
     }
 
 #pragma endregion

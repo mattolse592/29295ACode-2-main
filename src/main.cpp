@@ -389,7 +389,7 @@ void opcontrol()
       arm.ManualMoveSet(false);
     }
 
-    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
+    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
 
 #pragma region Color Sort
     //
