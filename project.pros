@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "task Color test",
+    "project_name": "No Color Sort",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -189,9 +189,9 @@
       }
     },
     "upload_options": {
-      "description": "pingo",
-      "icon": "X",
-      "slot": 2,
+      "description": "browne",
+      "icon": "alien",
+      "slot": 1,
       "after": "none"
     }
   }
