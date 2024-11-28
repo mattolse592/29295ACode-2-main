@@ -185,12 +185,11 @@ void autonomous()
 //
 //
 //  TODO make shift button half the speed of the robot and test it || DONE 
-//  TODO ensure that mogo clamp and lock works || needs testing
 //  TODO make arm able to go back one position in the cycle with digital left button
 //  TODO test if arm is able to score on alliance stake
 //  TODO make button to zero the arm if it gets out of allignment
 //  TODO make button to turn off color sorter *PRIORITY BUTTON*
-//  TODO write stats to screen
+//  TODO write stats to screen. Status of mogo clamp, status of color sort, and drive motor temperature
 
 
 
