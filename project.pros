@@ -189,9 +189,11 @@
       }
     },
     "upload_options": {
+
       "description": "pingo",
       "icon": "clawbot",
       "slot": 5,
+
       "after": "none"
     }
   }

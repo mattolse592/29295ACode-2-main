@@ -185,12 +185,12 @@ void autonomous()
 //
 //
 //  TODO make shift button half the speed of the robot and test it || DONE 
-//  TODO ensure that mogo clamp and lock works || needs testing
 //  TODO make arm able to go back one position in the cycle with digital left button
 //  TODO test if arm is able to score on alliance stake
 //  TODO make button to zero the arm if it gets out of allignment
 //  TODO make button to turn off color sorter *PRIORITY BUTTON*
-//  TODO write stats to screen
+//  TODO make intake go backwards for 1 tick when putting arm into reach position 
+//  TODO write stats to screen. Status of mogo clamp, status of color sort, and drive motor temperature
 
 
 
@@ -232,9 +232,6 @@ void opcontrol()
   HoldButton button_R2(master, DIGITAL_R2);
   HoldButton button_L2(master, DIGITAL_L2);
   TapButton button_L1(master, DIGITAL_L1);
-
-  ShiftedButton clampActivator(button_L2, shift_Button);
-  // code for if you want to lock unclamping behind the shift button. Make sure to tick() if added.
 
   // pneumatics
   MogoMech mogo('A');
@@ -278,7 +275,7 @@ void opcontrol()
     button_L2.Tick();
     shift_Button.Tick();
     button_L1.Tick();
-    clampActivator.Tick();
+  
 
     // motors
     intake.Tick();
@@ -320,7 +317,7 @@ void opcontrol()
     //
     // Mogo code
     //
-    if (clampActivator.IsOn())
+    if (button_A.IsOn())
     {
       mogo.Activate();
     }
@@ -346,16 +343,13 @@ void opcontrol()
     //
     if (button_R2.IsPressed())
     {
-      if (shift_Button.IsPressed())
-      {
-        intake.Reverse();
-        hooks.Reverse();
-      }
-      else
-      {
-        intake.Forward();
-        hooks.Forward();
-      }
+      intake.Forward();
+      hooks.Forward();
+    }
+    else if (button_L2.IsPressed())
+    {
+      intake.Reverse();
+      hooks.Reverse();
     }
     else
     {
@@ -363,16 +357,19 @@ void opcontrol()
       hooks.Stop();
     }
 
-#pragma region old intake code no shift button
+#pragma region old intake code with shift button
     // if (button_R2.IsPressed())
     // {
-    //   intake.Forward();
-    //   hooks.Forward();
-    // }
-    // else if (button_L2.IsPressed())
-    // {
-    //   intake.Reverse();
-    //   hooks.Reverse();
+    //   if (shift_Button.IsPressed())
+    //   {
+    //     intake.Reverse();
+    //     hooks.Reverse();
+    //   }
+    //   else
+    //   {
+    //     intake.Forward();
+    //     hooks.Forward();
+    //   }
     // }
     // else
     // {
@@ -396,22 +393,25 @@ void opcontrol()
       arm.ManualMoveSet(false);
     }
 
-    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 3));
+    arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
 
 #pragma region Color Sort
+
     // //
     // // color sort ONLY WORKS FOR RED ALLIANCE
     // //
+
     // if (limSwitch.GetValue() == true)
     // {
     //   ringDetected = true;
     //   badColour = false;
 
+
     //   if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
     //   {
     //     badColour = true;
     //   }
-    // }
+
 
     // // blue bad
     // if (limSwitch.GetValue() == false && ringDetected == true)
