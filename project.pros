@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "redSafe",
+    "project_name": "Color sort auton test",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -189,11 +189,9 @@
       }
     },
     "upload_options": {
-
       "description": "pingo",
-      "icon": "clawbot",
-      "slot": 5,
-
+      "icon": "planet",
+      "slot": 6,
       "after": "none"
     }
   }

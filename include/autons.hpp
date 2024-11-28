@@ -4,6 +4,7 @@
 
 extern Drive chassis;
 
+void ColorSortTest();
 void soloAWPred();
 void soloAWPblue();
 void SafeAutonRed();

@@ -97,8 +97,9 @@ void initialize()
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
 
+      Auton("color sort test", ColorSortTest),
       //Auton("Runs Red solo AWP autonomous", soloAWPred),
-      Auton("Runs Red Safe autonomous", SafeAutonRed),
+      //Auton("Runs Red Safe autonomous", SafeAutonRed),
       //Auton("Runs blue solo AWP autonomous", soloAWPblue),
       //Auton("Runs blue Safe autonomous", SafeAutonBlue),
       //Auton(" soloAWPred", soloAWPred),
@@ -405,7 +406,7 @@ void opcontrol()
     // {
     //   ringDetected = true;
     //   badColour = false;
-
+    //  }
 
     //   if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
     //   {
