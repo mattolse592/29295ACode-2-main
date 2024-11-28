@@ -97,11 +97,11 @@ void initialize()
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
 
-      // Auton("Runs Red solo AWP autonomous", soloAWPred),
-      // Auton("Runs Red Safe autonomous", SafeAutonRed),
-      // Auton("Runs blue solo AWP autonomous", soloAWPblue),
-      // Auton("Runs blue Safe autonomous", SafeAutonBlue),
-      Auton(" get off the line Auton", soloAWPred),
+      //Auton("Runs Red solo AWP autonomous", soloAWPred),
+      Auton("Runs Red Safe autonomous", SafeAutonRed),
+      //Auton("Runs blue solo AWP autonomous", soloAWPblue),
+      //Auton("Runs blue Safe autonomous", SafeAutonBlue),
+      //Auton(" soloAWPred", soloAWPred),
 
       // Auton(" Testing skills auton", skillsAuton),
 
@@ -196,6 +196,9 @@ void autonomous()
 
 void opcontrol()
 {
+
+  
+
   int reverseTimer = 0;
   bool ringDetected = false;
   bool badColour = false;
@@ -393,19 +396,22 @@ void opcontrol()
     arm.SetTarget((Arm::State)(button_L1.TimesPressed() % 4));
 
 #pragma region Color Sort
-    //
-    // color sort ONLY WORKS FOR RED ALLIANCE
-    //
+
+    // //
+    // // color sort ONLY WORKS FOR RED ALLIANCE
+    // //
+
     // if (limSwitch.GetValue() == true)
     // {
     //   ringDetected = true;
     //   badColour = false;
 
+
     //   if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
     //   {
     //     badColour = true;
     //   }
-    // }
+
 
     // // blue bad
     // if (limSwitch.GetValue() == false && ringDetected == true)
@@ -414,18 +420,18 @@ void opcontrol()
     //   ringDetected = false;
     // }
 
-    // // red bad
-    // if (limSwitch.GetValue() == false && ringDetected == true && o.GetHue() >= 320 && o.GetProx() > 150)
-    // {
-    //   badColorDetected = 20;
-    //   ringDetected = false;
-    // }
+    // // // red bad
+    // // if (limSwitch.GetValue() == false && ringDetected == true && o.GetHue() >= 320 && o.GetProx() > 150)
+    // // {
+    // //   badColorDetected = 20;
+    // //   ringDetected = false;
+    // // }
 
-    if (reverseTimer > 0 && badColour)
-    {
-      hooks.Reverse();
-    }
-    reverseTimer -= 1;
+    // if (reverseTimer > 0 && badColour)
+    // {
+    //   hooks.Reverse();
+    // }
+    // reverseTimer--;
 #pragma endregion
 
     //

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "No Color Sort",
+    "project_name": "redSafe",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -189,9 +189,11 @@
       }
     },
     "upload_options": {
-      "description": "browne",
-      "icon": "alien",
-      "slot": 1,
+
+      "description": "pingo",
+      "icon": "clawbot",
+      "slot": 5,
+
       "after": "none"
     }
   }
