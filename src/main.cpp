@@ -189,6 +189,7 @@ void autonomous()
 //  TODO test if arm is able to score on alliance stake
 //  TODO make button to zero the arm if it gets out of allignment
 //  TODO make button to turn off color sorter *PRIORITY BUTTON*
+//  TODO make intake go backwards for 1 tick when putting arm into reach position 
 //  TODO write stats to screen. Status of mogo clamp, status of color sort, and drive motor temperature
 
 
