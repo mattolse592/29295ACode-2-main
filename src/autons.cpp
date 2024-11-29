@@ -30,6 +30,7 @@ Intake hooks(Motor(-6, pros::E_MOTOR_GEARSET_18));
 int reverseTimer = 0;
 bool ringDetected = false;
 bool badColour = false;
+bool intakeOn = false;
 
 // It's best practice to tune constants when the robot is empty and with heavier game objects, or with lifts up vs down.
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
@@ -135,7 +136,7 @@ void ColorSortFunction()
   bool ringDetected = false;
   bool badColour = false;
 
-  while (true)
+  while (pros::competition::is_autonomous())
   {
     o.Tick();
     limSwitch.Tick();
@@ -164,9 +165,12 @@ void ColorSortFunction()
     {
       hooks.Reverse();
     }
-    else
+    else if (intakeOn == true)
     {
       hooks.Forward();
+    }
+    else {
+      hooks.Stop();
     }
     reverseTimer--;
     pros::delay(ez::util::DELAY_TIME);
@@ -179,13 +183,16 @@ void ColorSortTest()
 
 void SafeAutonRed()
 {
-  DRIVE_SPEED -= 40;
+  pros::Task sortTask(ColorSortFunction);
+  intakeOn = false;
+  DRIVE_SPEED -= 30;
 
   // drive to and grab mogo
-  chassis.set_drive_pid(-80, DRIVE_SPEED - 20);
+  chassis.set_drive_pid(-80, DRIVE_SPEED - 15);
   chassis.wait_drive();
   m.set_value(true);
   pros::delay(400);
+  intakeOn = true;
 
   // score pre load and turn to ring stacks
   hooks.Forward();
@@ -205,7 +212,7 @@ void SafeAutonRed()
   // goes forward into rings
   chassis.set_drive_pid(30, DRIVE_SPEED / 2);
   chassis.wait_drive();
-  chassis.set_drive_pid(50, DRIVE_SPEED);
+  chassis.set_drive_pid(45, DRIVE_SPEED);
   chassis.wait_drive();
   chassis.set_drive_pid(-5, DRIVE_SPEED);
   chassis.wait_drive();
@@ -219,12 +226,16 @@ void SafeAutonRed()
   chassis.wait_drive();
 
   // drives and intakes ring
-  chassis.set_drive_pid(70, DRIVE_SPEED);
+  chassis.set_drive_pid(70, DRIVE_SPEED-40);
   chassis.wait_drive();
+
+  //go get middle ring
+  
 }
 
 void soloAWPred()
 {
+  pros::Task sortTask(ColorSortFunction);
   // drive forwards
   chassis.set_drive_pid(-115, DRIVE_SPEED);
   chassis.wait_drive();
@@ -234,12 +245,12 @@ void soloAWPred()
   chassis.wait_drive();
 
   // drives up, graps mogo and score preload
-  chassis.set_drive_pid(-20, DRIVE_SPEED - 70);
+  chassis.set_drive_pid(-22, DRIVE_SPEED - 70);
   chassis.wait_drive();
-  pros::Task sortTask(ColorSortFunction);
   m.set_value(true);
   pros::delay(300);
- 
+  intakeOn = true;
+  m.set_value(true);
 
   // turn and back up into rings
   chassis.set_turn_pid(-10, TURN_SPEED);
@@ -274,18 +285,22 @@ void soloAWPred()
   chassis.set_turn_pid(45, TURN_SPEED);
   chassis.wait_drive();
 
-  //drives to ring
+  // drives to ring
   chassis.set_drive_pid(100, DRIVE_SPEED);
   chassis.wait_drive();
   pros::delay(800);
   chassis.set_drive_pid(20, DRIVE_SPEED);
   chassis.wait_drive();
+  chassis.set_drive_pid(-10, DRIVE_SPEED);
+  chassis.wait_drive();
 
-  //turn and drive to ladder
-  chassis.set_turn_pid(-160, TURN_SPEED);
+
+  // turn and drive to ladder
+  chassis.set_turn_pid(-150, TURN_SPEED);
   chassis.wait_drive();
   chassis.set_drive_pid(80, DRIVE_SPEED);
   chassis.wait_drive();
+  intakeOn = false;
 
 #pragma region turns towards middle ring stack not used
 // chassis.set_turn_pid(45, TURN_SPEED);

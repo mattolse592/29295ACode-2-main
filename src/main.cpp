@@ -97,12 +97,12 @@ void initialize()
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
 
-      //Auton("color sort test", ColorSortTest),
-      Auton("Runs Red solo AWP autonomous", soloAWPred),
-      //Auton("Runs Red Safe autonomous", SafeAutonRed),
-      //Auton("Runs blue solo AWP autonomous", soloAWPblue),
-      //Auton("Runs blue Safe autonomous", SafeAutonBlue),
-      //Auton(" soloAWPred", soloAWPred),
+      // Auton("color sort test", ColorSortTest),
+      //Auton("Runs Red solo AWP autonomous", soloAWPred),
+       Auton("Runs Red Safe autonomous", SafeAutonRed),
+      // Auton("Runs blue solo AWP autonomous", soloAWPblue),
+      // Auton("Runs blue Safe autonomous", SafeAutonBlue),
+      // Auton(" soloAWPred", soloAWPred),
 
       // Auton(" Testing skills auton", skillsAuton),
 
@@ -185,20 +185,16 @@ void autonomous()
 // todo list
 //
 //
-//  TODO make shift button half the speed of the robot and test it || DONE 
+//  TODO make shift button half the speed of the robot and test it || DONE
 //  TODO make arm able to go back one position in the cycle with digital left button
 //  TODO test if arm is able to score on alliance stake
 //  TODO make button to zero the arm if it gets out of allignment
 //  TODO make button to turn off color sorter *PRIORITY BUTTON*
-//  TODO make intake go backwards for 1 tick when putting arm into reach position 
+//  TODO make intake go backwards for 1 tick when putting arm into reach position
 //  TODO write stats to screen. Status of mogo clamp, status of color sort, and drive motor temperature
-
-
 
 void opcontrol()
 {
-
-  
 
   int reverseTimer = 0;
   bool ringDetected = false;
@@ -249,14 +245,14 @@ void opcontrol()
   Intake hooks(Motor(-6, pros::E_MOTOR_GEARSET_18));
 
   // arm subsystem
-  RotationSensor rotSen(14);
+  RotationSensor rotSen(15);
   rotSen.Zero();
   Arm arm(Motor(-12, pros::E_MOTOR_GEARSET_36), rotSen);
 
   // turn color sensor light on
   o.LEDon();
 
-  //DRIVER CONTROL LOOP
+  // DRIVER CONTROL LOOP
   while (true)
   {
 
@@ -276,7 +272,6 @@ void opcontrol()
     button_L2.Tick();
     shift_Button.Tick();
     button_L1.Tick();
-  
 
     // motors
     intake.Tick();
@@ -399,40 +394,39 @@ void opcontrol()
 #pragma region Color Sort
 
     // //
-    // // color sort ONLY WORKS FOR RED ALLIANCE
+    // // color sort Need to change for EACH ALLIANCE
     // //
 
-    // if (limSwitch.GetValue() == true)
+    if (limSwitch.GetValue() == true)
+    {
+      ringDetected = true;
+      badColour = false;
+     }
+
+      if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
+      {
+        badColour = true;
+      }
+
+    // blue bad
+    if (limSwitch.GetValue() == false && ringDetected == true)
+    {
+      reverseTimer = 20;
+      ringDetected = false;
+    }
+
+    // // red bad
+    // if (limSwitch.GetValue() == false && ringDetected == true && o.GetHue() >= 320 && o.GetProx() > 150)
     // {
-    //   ringDetected = true;
-    //   badColour = false;
-    //  }
-
-    //   if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
-    //   {
-    //     badColour = true;
-    //   }
-
-
-    // // blue bad
-    // if (limSwitch.GetValue() == false && ringDetected == true)
-    // {
-    //   reverseTimer = 20;
+    //   badColorDetected = 20;
     //   ringDetected = false;
     // }
 
-    // // // red bad
-    // // if (limSwitch.GetValue() == false && ringDetected == true && o.GetHue() >= 320 && o.GetProx() > 150)
-    // // {
-    // //   badColorDetected = 20;
-    // //   ringDetected = false;
-    // // }
-
-    // if (reverseTimer > 0 && badColour)
-    // {
-    //   hooks.Reverse();
-    // }
-    // reverseTimer--;
+    if (reverseTimer > 0 && badColour)
+    {
+      hooks.Reverse();
+    }
+     reverseTimer--;
 #pragma endregion
 
     //
@@ -441,6 +435,9 @@ void opcontrol()
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
     master.set_text(0, 0, "MotSped: " + std::to_string(reverseTimer));
 
+    master.print(1, 0, "Mogo State: ", std::to_string(button_A.IsOn()));
+
+    // this literally does not work
     ez::print_to_screen("Rot: " + std::to_string(arm.GetPosition()));
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

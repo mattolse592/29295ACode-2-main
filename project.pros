@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "soloRed",
+    "project_name": "safeRed",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -189,9 +189,9 @@
       }
     },
     "upload_options": {
-      "description": "pingo",
-      "icon": "planet",
-      "slot": 2,
+      "description": "mark",
+      "icon": "pros",
+      "slot": 1,
       "after": "none"
     }
   }
