@@ -225,9 +225,7 @@ void SafeAutonRed()
 
 void soloAWPred()
 {
-
   // drive forwards
-
   chassis.set_drive_pid(-115, DRIVE_SPEED);
   chassis.wait_drive();
 
