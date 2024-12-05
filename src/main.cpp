@@ -340,12 +340,12 @@ void opcontrol()
     if (button_R2.IsPressed())
     {
       intake.Forward();
-      hooks.Forward();
+      hooks.Reverse();
     }
     else if (button_L2.IsPressed())
     {
       intake.Reverse();
-      hooks.Reverse();
+      hooks.Forward();
     }
     else
     {
