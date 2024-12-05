@@ -97,11 +97,15 @@ void initialize()
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
 
-      // Auton("color sort test", ColorSortTest),
+      //Auton("color sort test", ColorSortTest),
       //Auton("Runs Red solo AWP autonomous", soloAWPred),
-       Auton("Runs Red Safe autonomous", SafeAutonRed),
-      // Auton("Runs blue solo AWP autonomous", soloAWPblue),
-      // Auton("Runs blue Safe autonomous", SafeAutonBlue),
+      //Auton("Runs Red Safe autonomous", SafeAutonRed),
+      //Auton("Runs skills auton", skills),
+      //Auton("Runs blue solo AWP autonomous", soloAWPblue),
+      //Auton("Runs blue Safe autonomous", SafeAutonBlue),
+      //Auton("Runs Red Safe autonomous", SafeElimBlue),
+      Auton("Runs Red Safe autonomous", SafeElimRed),
+      //Auton("Runs Red Safe autonomous", soloElimRed),
       // Auton(" soloAWPred", soloAWPred),
 
       // Auton(" Testing skills auton", skillsAuton),
@@ -199,6 +203,7 @@ void opcontrol()
   int reverseTimer = 0;
   bool ringDetected = false;
   bool badColour = false;
+  bool sortingOn = true;
 
   // drive variables to calulate speeds with curve
   double power;
@@ -223,8 +228,10 @@ void opcontrol()
   Stick rightY(master, ANALOG_RIGHT_Y);
   Stick rightX(master, ANALOG_RIGHT_X);
 
+  ToggleButton button_DWN(master, DIGITAL_DOWN);
   ToggleButton button_A(master, DIGITAL_A);
   ToggleButton button_B(master, DIGITAL_B);
+  HoldButton button_Left(master, DIGITAL_LEFT);
   HoldButton shift_Button(master, DIGITAL_R1);
   HoldButton button_R2(master, DIGITAL_R2);
   HoldButton button_L2(master, DIGITAL_L2);
@@ -252,6 +259,9 @@ void opcontrol()
   // turn color sensor light on
   o.LEDon();
 
+  button_A.setValue(true);
+  button_B.setValue(true);
+  
   // DRIVER CONTROL LOOP
   while (true)
   {
@@ -266,6 +276,8 @@ void opcontrol()
     rightX.Tick();
 
     // raw buttons
+    button_DWN.Tick();
+    button_Left.Tick();
     button_A.Tick();
     button_B.Tick();
     button_R2.Tick();
@@ -377,6 +389,10 @@ void opcontrol()
     //
     //    Arm
     //
+    if(button_Left.IsPressed()) {
+      rotSen.Zero();
+    }
+  
     if (shift_Button.IsPressed())
     {
       arm.ManualMoveSet(true);
@@ -393,20 +409,42 @@ void opcontrol()
 
 #pragma region Color Sort
 
+if (button_DWN.IsOn()) {
+  if (sortingOn) {
+    sortingOn = false;
+    o.LEDoff();
+  }
+}
+else {
+    sortingOn = true;
+    o.LEDon();
+  }
+
     // //
     // // color sort Need to change for EACH ALLIANCE
     // //
-
+if (sortingOn) {
     if (limSwitch.GetValue() == true)
     {
       ringDetected = true;
       badColour = false;
      }
 
+      //blue
       if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
       {
         badColour = true;
       }
+
+      // //red
+      // if (o.GetHue() >= 320 && o.GetHue() <= 360 && o.GetProx() > 150)
+      // {
+      //   badColour = true;
+      // }
+      // else if (o.GetHue() >= 0 && o.GetHue() <= 50 && o.GetProx() > 150)
+      // {
+      //   badColour = true;
+      // }
 
     // blue bad
     if (limSwitch.GetValue() == false && ringDetected == true)
@@ -415,30 +453,23 @@ void opcontrol()
       ringDetected = false;
     }
 
-    // // red bad
-    // if (limSwitch.GetValue() == false && ringDetected == true && o.GetHue() >= 320 && o.GetProx() > 150)
-    // {
-    //   badColorDetected = 20;
-    //   ringDetected = false;
-    // }
-
     if (reverseTimer > 0 && badColour)
     {
       hooks.Reverse();
     }
      reverseTimer--;
+}
 #pragma endregion
 
     //
     // writing to screen
     //
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
-    master.set_text(0, 0, "MotSped: " + std::to_string(reverseTimer));
+   master.set_text(0, 0, "mogo: " + std::to_string(button_A.IsOn()));
 
-    master.print(1, 0, "Mogo State: ", std::to_string(button_A.IsOn()));
 
-    // this literally does not work
-    ez::print_to_screen("Rot: " + std::to_string(arm.GetPosition()));
+   
+  
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
