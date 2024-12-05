@@ -6,9 +6,12 @@ extern Drive chassis;
 
 void ColorSortTest();
 void soloAWPred();
+void soloElimRed();
 void soloAWPblue();
 void SafeAutonRed();
 void SafeAutonBlue();
+void SafeElimBlue();
+void SafeElimRed();
 void OffLineAuton();
 void drive_example();
 void turn_example();
@@ -21,7 +24,7 @@ void offAuton();
 void skillsAuton();
 void defAuton();
 void armTest();
-
+void skills();
 
 
 void default_constants();

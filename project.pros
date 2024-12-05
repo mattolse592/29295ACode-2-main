@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "hooks test",
+    "project_name": "ElimSafeRed",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -191,7 +191,7 @@
     "upload_options": {
       "description": "mark",
       "icon": "pros",
-      "slot": 5,
+      "slot": 8,
       "after": "none"
     }
   }

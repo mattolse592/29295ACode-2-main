@@ -25,6 +25,10 @@ public:
         }
     }
 
+    void setValue(bool value) {
+        Pressed_ = value;
+    }
+
     bool IsOn()
     {
         return Pressed_;

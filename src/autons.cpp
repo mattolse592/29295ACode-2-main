@@ -21,11 +21,14 @@ const int SWING_SPEED = 90;
 ///
 // Constants
 ///
+RotationSensor rotSen(15);
 pros::ADIDigitalOut m('A');
+pros::ADIDigitalOut doinker('D');
 LimitSwitch limSwitch('B');
 OpticalSensor o(1);
 Intake intake(Motor(5, pros::E_MOTOR_GEARSET_06));
 Intake hooks(Motor(-6, pros::E_MOTOR_GEARSET_18));
+Arm arm(Motor(-12, pros::E_MOTOR_GEARSET_36), rotSen);
 
 int reverseTimer = 0;
 bool ringDetected = false;
@@ -138,6 +141,7 @@ void ColorSortFunction()
 
   while (pros::competition::is_autonomous())
   {
+    arm.Tick();
     o.Tick();
     limSwitch.Tick();
 
@@ -149,12 +153,23 @@ void ColorSortFunction()
       badColour = false;
     }
 
-    if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
-    {
-      badColour = true;
-    }
+    //blue
+      if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
+      {
+        badColour = true;
+      }
 
-    // blue bad
+      //  //red
+      // if (o.GetHue() >= 320 && o.GetHue() <= 360 && o.GetProx() > 150)
+      // {
+      //   badColour = true;
+      // }
+      // else if (o.GetHue() >= 0 && o.GetHue() <= 50 && o.GetProx() > 150)
+      // {
+      //   badColour = true;
+      // }
+
+
     if (limSwitch.GetValue() == 0 && ringDetected == true)
     {
       reverseTimer = 20;
@@ -183,15 +198,15 @@ void ColorSortTest()
 
 void SafeAutonRed()
 {
-  pros::Task sortTask(ColorSortFunction);
+   pros::Task sortTask(ColorSortFunction);
   intakeOn = false;
   DRIVE_SPEED -= 30;
 
   // drive to and grab mogo
-  chassis.set_drive_pid(-80, DRIVE_SPEED - 15);
+  chassis.set_drive_pid(-80, DRIVE_SPEED - 20);
   chassis.wait_drive();
   m.set_value(true);
-  pros::delay(400);
+  pros::delay(500);
   intakeOn = true;
 
   // score pre load and turn to ring stacks
@@ -201,22 +216,18 @@ void SafeAutonRed()
   chassis.wait_drive();
 
   // drive to ring stack
-  chassis.set_drive_pid(54, DRIVE_SPEED);
+  chassis.set_drive_pid(53, DRIVE_SPEED);
   chassis.wait_drive();
-  pros::delay(200);
+  //pros::delay(00);
 
   // turns and get rings
   chassis.set_turn_pid(63, TURN_SPEED);
   chassis.wait_drive();
 
   // goes forward into rings
-  chassis.set_drive_pid(30, DRIVE_SPEED / 2);
+  chassis.set_drive_pid(30, DRIVE_SPEED - 20);
   chassis.wait_drive();
-  chassis.set_drive_pid(45, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-5, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(5, DRIVE_SPEED);
+  chassis.set_drive_pid(36, DRIVE_SPEED);
   chassis.wait_drive();
 
   // turns to rings
@@ -230,6 +241,77 @@ void SafeAutonRed()
   chassis.wait_drive();
 
   //go get middle ring
+  chassis.set_turn_pid(-100, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED + 30);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  chassis.set_drive_pid(40, DRIVE_SPEED - 10);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-230, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED);
+  chassis.wait_drive();
+}
+
+void SafeElimBlue() {
+  pros::Task sortTask(ColorSortFunction);
+  intakeOn = false;
+  DRIVE_SPEED -= 30;
+
+  // drive to and grab mogo
+  chassis.set_drive_pid(-80, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  m.set_value(true);
+  pros::delay(500);
+  intakeOn = true;
+
+  // score pre load and turn to ring stacks
+  hooks.Forward();
+  intake.Forward();
+  chassis.set_turn_pid(-120, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drive to ring stack
+  chassis.set_drive_pid(53, DRIVE_SPEED);
+  chassis.wait_drive();
+  //pros::delay(00);
+
+  // turns and get rings
+  chassis.set_turn_pid(-63, TURN_SPEED);
+  chassis.wait_drive();
+
+  // goes forward into rings
+  chassis.set_drive_pid(30, DRIVE_SPEED / 2);
+  chassis.wait_drive();
+  chassis.set_drive_pid(38, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // turns to rings
+  chassis.set_drive_pid(-16, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(47, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drives and intakes ring
+  chassis.set_drive_pid(70, DRIVE_SPEED-40);
+  chassis.wait_drive();
+
+  //go get middle ring
+  chassis.set_turn_pid(100, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED + 30);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  chassis.set_drive_pid(40, DRIVE_SPEED - 10);
+  chassis.wait_drive();
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+  doinker.set_value(true);
+  chassis.set_drive_pid(100, DRIVE_SPEED + 30);
+  chassis.wait_drive();
   
 }
 
@@ -348,10 +430,83 @@ void soloAWPred()
 #pragma endregion
 }
 
+void SafeElimRed() {
+  pros::Task sortTask(ColorSortFunction);
+  intakeOn = false;
+  DRIVE_SPEED -= 30;
+
+  // drive to and grab mogo
+  chassis.set_drive_pid(-80, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  m.set_value(true);
+  pros::delay(500);
+  intakeOn = true;
+
+  // score pre load and turn to ring stacks
+  hooks.Forward();
+  intake.Forward();
+  chassis.set_turn_pid(120, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drive to ring stack
+  chassis.set_drive_pid(53, DRIVE_SPEED);
+  chassis.wait_drive();
+  //pros::delay(00);
+
+  // turns and get rings
+  chassis.set_turn_pid(63, TURN_SPEED);
+  chassis.wait_drive();
+
+  // goes forward into rings
+  chassis.set_drive_pid(30, DRIVE_SPEED / 2);
+  chassis.wait_drive();
+  chassis.set_drive_pid(38, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // turns to rings
+  chassis.set_drive_pid(-16, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-47, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drives and intakes ring
+  chassis.set_drive_pid(70, DRIVE_SPEED-40);
+  chassis.wait_drive();
+
+  //go get middle ring
+  chassis.set_turn_pid(-100, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED + 30);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  chassis.set_drive_pid(40, DRIVE_SPEED - 10);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-90, TURN_SPEED);
+  chassis.wait_drive();
+  doinker.set_value(true);
+  chassis.set_drive_pid(100, DRIVE_SPEED + 30);
+  chassis.wait_drive();
+  
+}
+void soloElimRed() {
+  pros::Task sortTask(ColorSortFunction);
+  intakeOn = false;
+  chassis.set_drive_pid(-115, DRIVE_SPEED);
+  chassis.wait_drive();
+  m.set_value(true);
+  pros::delay(50);
+  chassis.set_drive_pid(50, DRIVE_SPEED);
+  chassis.wait_drive();
+  intakeOn = true;
+   
+}
+
+
 void soloAWPblue()
 {
+  pros::Task sortTask(ColorSortFunction);
   // drive forwards
-
   chassis.set_drive_pid(-115, DRIVE_SPEED);
   chassis.wait_drive();
 
@@ -360,12 +515,12 @@ void soloAWPblue()
   chassis.wait_drive();
 
   // drives up, graps mogo and score preload
-  chassis.set_drive_pid(-20, DRIVE_SPEED - 70);
+  chassis.set_drive_pid(-22, DRIVE_SPEED - 70);
   chassis.wait_drive();
   m.set_value(true);
   pros::delay(300);
-  hooks.Forward();
-  intake.Forward();
+  intakeOn = true;
+  m.set_value(true);
 
   // turn and back up into rings
   chassis.set_turn_pid(10, TURN_SPEED);
@@ -386,8 +541,6 @@ void soloAWPblue()
   chassis.wait_drive();
 
   // turns towards the other mogo
-
-  intake.Reverse();
   TURN_SPEED -= 30;
   chassis.set_turn_pid(75, TURN_SPEED);
   chassis.wait_drive();
@@ -397,25 +550,41 @@ void soloAWPblue()
   chassis.wait_drive();
   pros::delay(100);
   m.set_value(true);
-  intake.Forward();
   pros::delay(300);
 
   chassis.set_turn_pid(-45, TURN_SPEED);
   chassis.wait_drive();
 
-  // intakeStop();
+  // drives to ring
   chassis.set_drive_pid(100, DRIVE_SPEED);
+  chassis.wait_drive();
+  pros::delay(800);
+  chassis.set_drive_pid(20, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-10, DRIVE_SPEED);
+  chassis.wait_drive();
+
+
+  // turn and drive to ladder
+  chassis.set_turn_pid(150, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(80, DRIVE_SPEED);
+  chassis.wait_drive();
+  intakeOn = false;
 }
 
 void SafeAutonBlue()
 {
-  DRIVE_SPEED -= 40;
+   pros::Task sortTask(ColorSortFunction);
+  intakeOn = false;
+  DRIVE_SPEED -= 30;
 
   // drive to and grab mogo
   chassis.set_drive_pid(-80, DRIVE_SPEED - 20);
   chassis.wait_drive();
   m.set_value(true);
-  pros::delay(400);
+  pros::delay(500);
+  intakeOn = true;
 
   // score pre load and turn to ring stacks
   hooks.Forward();
@@ -424,9 +593,9 @@ void SafeAutonBlue()
   chassis.wait_drive();
 
   // drive to ring stack
-  chassis.set_drive_pid(54, DRIVE_SPEED);
+  chassis.set_drive_pid(53, DRIVE_SPEED);
   chassis.wait_drive();
-  pros::delay(200);
+  //pros::delay(00);
 
   // turns and get rings
   chassis.set_turn_pid(-63, TURN_SPEED);
@@ -435,11 +604,7 @@ void SafeAutonBlue()
   // goes forward into rings
   chassis.set_drive_pid(30, DRIVE_SPEED / 2);
   chassis.wait_drive();
-  chassis.set_drive_pid(50, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-5, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(5, DRIVE_SPEED);
+  chassis.set_drive_pid(38, DRIVE_SPEED);
   chassis.wait_drive();
 
   // turns to rings
@@ -449,9 +614,66 @@ void SafeAutonBlue()
   chassis.wait_drive();
 
   // drives and intakes ring
-  chassis.set_drive_pid(70, DRIVE_SPEED);
+  chassis.set_drive_pid(70, DRIVE_SPEED-40);
+  chassis.wait_drive();
+
+  //go get middle ring
+  chassis.set_turn_pid(100, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED + 30);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED - 20);
+  chassis.wait_drive();
+  chassis.set_drive_pid(40, DRIVE_SPEED - 10);
+  chassis.wait_drive();
+  chassis.set_turn_pid(230, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED);
+  chassis.wait_drive();
+  
+}
+
+void skills()
+{
+  arm.ManualMoveSet(false);
+  pros::Task sortTask(ColorSortFunction);
+  intakeOn = false;
+  //grabs first mogo
+  chassis.set_drive_pid(-40, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-90, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-60, DRIVE_SPEED - 50);
+  chassis.wait_drive();
+  m.set_value(true);
+  intakeOn = true;
+  pros::delay(400);
+
+  //turn and grab next ring
+  chassis.set_turn_pid(-180, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED - 70);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-270, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED - 70);
+  chassis.wait_drive();
+
+  //turns to next rings 
+  chassis.set_turn_pid(-360, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(80, DRIVE_SPEED - 90);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-20, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-270, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(40, DRIVE_SPEED - 90);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-270, TURN_SPEED);
   chassis.wait_drive();
 }
+
 
 #pragma region trash autons
 ///
