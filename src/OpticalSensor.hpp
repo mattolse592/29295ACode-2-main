@@ -35,6 +35,10 @@ public:
     void LEDon() {
         OpticalSensor_.set_led_pwm(100);
     }
+
+    void LEDoff() {
+        OpticalSensor_.set_led_pwm(0);
+    }
    
 };
 #endif // OPTICALSENSOR_HPP
