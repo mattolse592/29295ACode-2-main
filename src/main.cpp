@@ -97,15 +97,15 @@ void initialize()
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
 
-      //Auton("color sort test", ColorSortTest),
-      //Auton("Runs Red solo AWP autonomous", soloAWPred),
-      //Auton("Runs Red Safe autonomous", SafeAutonRed),
-      //Auton("Runs skills auton", skills),
-      //Auton("Runs blue solo AWP autonomous", soloAWPblue),
-      //Auton("Runs blue Safe autonomous", SafeAutonBlue),
-      //Auton("Runs Red Safe autonomous", SafeElimBlue),
+      // Auton("color sort test", ColorSortTest),
+      // Auton("Runs Red solo AWP autonomous", soloAWPred),
+      // Auton("Runs Red Safe autonomous", SafeAutonRed),
+      // Auton("Runs skills auton", skills),
+      // Auton("Runs blue solo AWP autonomous", soloAWPblue),
+      // Auton("Runs blue Safe autonomous", SafeAutonBlue),
+      // Auton("Runs Red Safe autonomous", SafeElimBlue),
       Auton("Runs Red Safe autonomous", SafeElimRed),
-      //Auton("Runs Red Safe autonomous", soloElimRed),
+      // Auton("Runs Red Safe autonomous", soloElimRed),
       // Auton(" soloAWPred", soloAWPred),
 
       // Auton(" Testing skills auton", skillsAuton),
@@ -261,7 +261,7 @@ void opcontrol()
 
   button_A.setValue(true);
   button_B.setValue(true);
-  
+
   // DRIVER CONTROL LOOP
   while (true)
   {
@@ -389,10 +389,11 @@ void opcontrol()
     //
     //    Arm
     //
-    if(button_Left.IsPressed()) {
+    if (button_Left.IsPressed())
+    {
       rotSen.Zero();
     }
-  
+
     if (shift_Button.IsPressed())
     {
       arm.ManualMoveSet(true);
@@ -409,28 +410,32 @@ void opcontrol()
 
 #pragma region Color Sort
 
-if (button_DWN.IsOn()) {
-  if (sortingOn) {
-    sortingOn = false;
-    o.LEDoff();
-  }
-}
-else {
-    sortingOn = true;
-    o.LEDon();
-  }
+    if (button_DWN.IsOn())
+    {
+      if (sortingOn)
+      {
+        sortingOn = false;
+        o.LEDoff();
+      }
+    }
+    else
+    {
+      sortingOn = true;
+      o.LEDon();
+    }
 
     // //
     // // color sort Need to change for EACH ALLIANCE
     // //
-if (sortingOn) {
-    if (limSwitch.GetValue() == true)
+    if (sortingOn)
     {
-      ringDetected = true;
-      badColour = false;
-     }
+      if (limSwitch.GetValue() == true)
+      {
+        ringDetected = true;
+        badColour = false;
+      }
 
-      //blue
+      // blue
       if (o.GetHue() >= 180 && o.GetHue() <= 230 && o.GetProx() > 150)
       {
         badColour = true;
@@ -446,30 +451,26 @@ if (sortingOn) {
       //   badColour = true;
       // }
 
-    // blue bad
-    if (limSwitch.GetValue() == false && ringDetected == true)
-    {
-      reverseTimer = 20;
-      ringDetected = false;
-    }
+      // blue bad
+      if (limSwitch.GetValue() == false && ringDetected == true)
+      {
+        reverseTimer = 20;
+        ringDetected = false;
+      }
 
-    if (reverseTimer > 0 && badColour)
-    {
-      hooks.Reverse();
+      if (reverseTimer > 0 && badColour)
+      {
+        hooks.Reverse();
+      }
+      reverseTimer--;
     }
-     reverseTimer--;
-}
 #pragma endregion
 
     //
     // writing to screen
     //
     // ez::print_to_screen("Drive Motor Temp: " + std::to_string(static_cast<int>(chassis.left_motors[0].get_temperature())), 2);
-   master.set_text(0, 0, "mogo: " + std::to_string(button_A.IsOn()));
-
-
-   
-  
+    master.set_text(0, 0, "mogo: " + std::to_string(button_A.IsOn()));
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
