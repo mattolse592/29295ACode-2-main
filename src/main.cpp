@@ -97,15 +97,16 @@ void initialize()
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
 
-      // Auton("color sort test", ColorSortTest),
-      // Auton("Runs Red solo AWP autonomous", soloAWPred),
-      // Auton("Runs Red Safe autonomous", SafeAutonRed),
-      // Auton("Runs skills auton", skills),
-      // Auton("Runs blue solo AWP autonomous", soloAWPblue),
-      // Auton("Runs blue Safe autonomous", SafeAutonBlue),
-      // Auton("Runs Red Safe autonomous", SafeElimBlue),
-      Auton("Runs Red Safe autonomous", SafeElimRed),
-      // Auton("Runs Red Safe autonomous", soloElimRed),
+      //Auton("color sort test", ColorSortTest),
+      //Auton("Runs Red solo AWP autonomous", soloAWPred),
+      //Auton("Runs Red Safe autonomous", SafeAutonRed),
+      Auton("Runs skills auton", skills),
+      //Auton("Runs blue solo AWP autonomous", soloAWPblue),
+      //Auton("Runs blue Safe autonomous", SafeAutonBlue),
+      //Auton("Runs Red Safe autonomous", SafeElimBlue),
+      //Auton("Runs Red Safe autonomous", SafeElimRed),
+      //Auton("Runs Red Safe autonomous", soloElimRed),
+
       // Auton(" soloAWPred", soloAWPred),
 
       // Auton(" Testing skills auton", skillsAuton),
@@ -248,13 +249,13 @@ void opcontrol()
   LimitSwitch limSwitch('B');
 
   // intake subsystem
-  Intake intake(Motor(5, pros::E_MOTOR_GEARSET_06));
-  Intake hooks(Motor(-6, pros::E_MOTOR_GEARSET_18));
+  Intake intake(Motor(3, pros::E_MOTOR_GEARSET_06));
+  Intake hooks(Motor(6, pros::E_MOTOR_GEARSET_18));
 
   // arm subsystem
   RotationSensor rotSen(15);
   rotSen.Zero();
-  Arm arm(Motor(-12, pros::E_MOTOR_GEARSET_36), rotSen);
+  Arm arm(Motor(-21, pros::E_MOTOR_GEARSET_36), rotSen);
 
   // turn color sensor light on
   o.LEDon();

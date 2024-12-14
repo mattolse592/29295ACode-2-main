@@ -26,15 +26,16 @@ pros::ADIDigitalOut m('A');
 pros::ADIDigitalOut doinker('D');
 LimitSwitch limSwitch('B');
 OpticalSensor o(1);
-Intake intake(Motor(5, pros::E_MOTOR_GEARSET_06));
-Intake hooks(Motor(-6, pros::E_MOTOR_GEARSET_18));
-Arm arm(Motor(-12, pros::E_MOTOR_GEARSET_36), rotSen);
+Intake intake(Motor(3, pros::E_MOTOR_GEARSET_06));
+Intake hooks(Motor(6, pros::E_MOTOR_GEARSET_18));
+Arm arm(Motor(-21, pros::E_MOTOR_GEARSET_36), rotSen);
 
 int reverseTimer = 0;
 bool ringDetected = false;
 bool badColour = false;
 bool intakeOn = false;
 
+Arm::State armPos = Arm::DOCK;
 // It's best practice to tune constants when the robot is empty and with heavier game objects, or with lifts up vs down.
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
 
@@ -141,9 +142,12 @@ void ColorSortFunction()
 
   while (pros::competition::is_autonomous())
   {
+    rotSen.Tick();
     arm.Tick();
     o.Tick();
     limSwitch.Tick();
+
+    arm.SetTarget(armPos);
 
     master.set_text(0, 0, "limswitch value " + std::to_string(limSwitch.GetValue()));
 
@@ -635,44 +639,152 @@ void SafeAutonBlue()
 
 void skills()
 {
-  arm.ManualMoveSet(false);
   pros::Task sortTask(ColorSortFunction);
   intakeOn = false;
-  //grabs first mogo
+
+  // score on stake
+  rotSen.Zero();
+  armPos = arm.REACH;
+  chassis.set_drive_pid(-5, DRIVE_SPEED / 2);
+  chassis.wait_drive();
+  pros::delay(500);
+  armPos = arm.DOCK;
+
+  //drive into 1st mogo 
   chassis.set_drive_pid(-40, DRIVE_SPEED);
   chassis.wait_drive();
-  chassis.set_turn_pid(-90, TURN_SPEED);
+  chassis.set_turn_pid(90, TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(-60, DRIVE_SPEED - 50);
+  chassis.set_drive_pid(-60, DRIVE_SPEED - 30);
   chassis.wait_drive();
   m.set_value(true);
   intakeOn = true;
+  pros::delay(450);
+
+  // drive to 1st ring
+  chassis.set_turn_pid(180, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(58, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // drive to second ring
+  chassis.set_turn_pid(270, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(74, DRIVE_SPEED- 30);
+  chassis.wait_drive();
+
+  // drive to wall stake
+  chassis.set_drive_pid(-10, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(180, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(49, DRIVE_SPEED);
+  chassis.wait_drive();
+  armPos = arm.LOAD;
+
+  //score on wall stake 
+  chassis.set_turn_pid(270,TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(20, DRIVE_SPEED);
+  chassis.wait_drive();
+  intakeOn = false;
+  armPos = arm.SCORE;
+  pros::delay(600);
+  chassis.set_drive_pid(-39, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // drives to corner rings
+  chassis.set_turn_pid(360,TURN_SPEED);
+  chassis.wait_drive();
+  armPos = arm.DOCK;
+  intakeOn = true;
+  chassis.set_drive_pid(90, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(55, DRIVE_SPEED - 50);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-35, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(270,TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(22, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(150,TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-34, DRIVE_SPEED);
+  chassis.wait_drive();
+  pros::delay(200);
+  m.set_value(false);
+
+  //drive to 2nd mogo
+  chassis.set_drive_pid(10, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(270, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-150, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-50, DRIVE_SPEED - 40);
+  chassis.wait_drive();
+  m.set_value(true);
   pros::delay(400);
 
-  //turn and grab next ring
-  chassis.set_turn_pid(-180, TURN_SPEED);
+  // drive to 1st ring
+  chassis.set_turn_pid(180, TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(50, DRIVE_SPEED - 70);
-  chassis.wait_drive();
-  chassis.set_turn_pid(-270, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(50, DRIVE_SPEED - 70);
+  chassis.set_drive_pid(58, DRIVE_SPEED);
   chassis.wait_drive();
 
-  //turns to next rings 
-  chassis.set_turn_pid(-360, TURN_SPEED);
+  // drive to 2nd 
+  chassis.set_turn_pid(90, TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(80, DRIVE_SPEED - 90);
+  chassis.set_drive_pid(49, DRIVE_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(-20, DRIVE_SPEED);
+
+  // drive to wall stake
+  chassis.set_turn_pid(180, TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_turn_pid(-270, TURN_SPEED);
+  chassis.set_drive_pid(49, DRIVE_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(40, DRIVE_SPEED - 90);
+  armPos = arm.LOAD;
+
+  //score on wall stake
+   chassis.set_turn_pid(90,TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_turn_pid(-270, TURN_SPEED);
+  chassis.set_drive_pid(47, DRIVE_SPEED);
   chassis.wait_drive();
+  pros::delay(300);
+  intakeOn = false;
+  armPos = arm.SCORE;
+  pros::delay(600);
+  chassis.set_drive_pid(-39, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  //drive to corner rings
+  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.wait_drive();
+  armPos = arm.DOCK;
+  intakeOn = true;
+  chassis.set_drive_pid(90, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(50, DRIVE_SPEED - 59);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-32, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(90,TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(31, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(210,TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-37, DRIVE_SPEED);
+  chassis.wait_drive();
+  pros::delay(200);
+  m.set_value(false);
+  chassis.set_drive_pid(15, DRIVE_SPEED);
+  chassis.wait_drive();
+  chassis.set_turn_pid(0, TURN_SPEED);
 }
+ 
+
 
 
 #pragma region trash autons
